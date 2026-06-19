@@ -4,10 +4,11 @@
 # If the tag exists already, it will be updated.
 #
 # Usage:
-# ./bin/tag gl-sys glfw-sys
+# $ ./bin/tag gl-sys glfw-sys
 #
 # After creating the tags, you can then (force) push to trigger CI to catch
 # them.
+# $ git push origin main --tags -f
 
 set -euo pipefail
 
