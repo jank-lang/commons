@@ -19,6 +19,7 @@ pushd "${here}/.." >/dev/null
   do
     pushd "${package}" >/dev/null
       version="$(lein update-in :version pr -- version | cut -d '"' -f 2)"
+      echo "Tagging ${package}/${version}"
       git tag -f "${package}/${version}"
     popd >/dev/null
   done
