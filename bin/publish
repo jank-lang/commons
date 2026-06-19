@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+previous="${1}"
+current="${2}"
+
+declare -a to_publish
+
+for commit in $(git log --reverse --pretty=format:"%H" "${previous}..${current}");
+do
+  echo "> ${commit}"
+  for tag in $(git tag --points-at "${commit}");
+  do
+    echo "  > ${tag}"
+    to_publish+=("${tag}")
+  done
+done
+
+echo
+for package in "${to_publish[@]}";
+do
+  name="${package%/*}"
+  version="${package#*/}"
+  pushd "${name}" >/dev/null
+    echo ":: Deploying ${name} with new version ${version}"
+    lein deploy clojars
+  popd >/dev/null
+done
