@@ -24,6 +24,6 @@ do
   version="${package#*/}"
   pushd "${name}" >/dev/null
     echo ":: Deploying ${name} with new version ${version}"
-    lein deploy clojars
+    lein deploy
   popd >/dev/null
 done
