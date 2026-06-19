@@ -1,4 +1,6 @@
 (defproject org.jank-lang.commons/imgui-sys "2026.06-1"
+  :description "Raw package for Dear ImGUI."
+  :url "https://github.com/jank-lang/commons"
   :license {:name "MPL 2.0"
             :url "https://www.mozilla.org/en-US/MPL/2.0/"}
   :dependencies []
