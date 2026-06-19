@@ -11,4 +11,4 @@
   (let [d-flags (map (fn [[k v]] (str "-D" (name k) "=" v))
                      (merge (default-defines input) defines))]
     (proc/shell (concat ["cmake"] d-flags ["-B" build-dir src-dir]))
-    (proc/shell ["cmake" "--build" build-dir "--target" target])))
+    (proc/shell ["cmake" "--build" build-dir "--parallel" "--target" target])))
