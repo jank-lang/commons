@@ -30,11 +30,22 @@ jobs:
           packages: git gpg leiningen
           # Increment this when the package list changes.
           version: 1
+      - name: Cache ~/.m2
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/project.clj') }}
+        restore-keys: |
+          ${{ runner.os }}-m2-
       - name: Configure GPG Key
         run: |
           echo -n "${JANK_GPG_SIGNING_KEY}" | gpg --import
         env:
           JANK_GPG_SIGNING_KEY: ${{ secrets.JANK_GPG_SIGNING_KEY }}
+      - name: Configure Leiningen
+        run: |
+          mkdir -p ~/.lein
+          echo '{:user {:repositories [["clojars" {:url "https://clojars.org/repo" :username :env/lein_username :password :env/lein_password}]]}}' > ~/.lein/profiles.clj
       - name: Find and publish
         run: ${{ github.workspace }}/bin/publish ${{ github.event.before }} ${{ github.sha }} || exit 1
         env:
