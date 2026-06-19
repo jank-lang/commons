@@ -6,4 +6,4 @@
   :plugins [[org.jank-lang/lein-jank "0.7"]]
   :middleware [leiningen.jank/middleware]
   :build-dependencies [[org.jank-lang.commons/jank-build-cmake "2026.06-1"]]
-  :verbatim-paths ["raylib"])
+  :verbatim-paths ["lib/raylib"])
