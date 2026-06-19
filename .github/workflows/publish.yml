@@ -34,9 +34,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/project.clj') }}
-        restore-keys: |
-          ${{ runner.os }}-m2-
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/project.clj') }}
+          restore-keys: |
+            ${{ runner.os }}-m2-
       - name: Configure GPG Key
         run: |
           echo -n "${JANK_GPG_SIGNING_KEY}" | gpg --import
