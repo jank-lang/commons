@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+pushd "${here}/.." >/dev/null
+  for package in "${@}";
+  do
+    pushd "${package}" >/dev/null
+      version="$(lein update-in :version pr -- version | cut -d '"' -f 2)"
+      git tag -f "${package}/${version}"
+    popd >/dev/null
+  done
+popd >/dev/null
