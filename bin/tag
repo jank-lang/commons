@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+# This script crates release tags for all specified packages.
+# If the tag exists already, it will be updated.
+#
+# Usage:
+# ./bin/tag gl-sys glfw-sys
+#
+# After creating the tags, you can then (force) push to trigger CI to catch
+# them.
+
 set -euo pipefail
 
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
