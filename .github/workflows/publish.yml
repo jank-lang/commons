@@ -47,7 +47,7 @@ jobs:
           mkdir -p ~/.lein
           echo '{:user {:repositories [["releases" {:url "https://clojars.org/repo" :username :env/lein_username :password :env/lein_password}]]}}' > ~/.lein/profiles.clj
       - name: Find and publish
-        run: ${{ github.workspace }}/bin/publish ${{ github.event.before }} ${{ github.sha }} || exit 1
+        run: ${{ github.workspace }}/bin/ci/publish ${{ github.event.before }} ${{ github.sha }} || exit 1
         env:
           LEIN_USERNAME: ${{ secrets.LEIN_USERNAME }}
           LEIN_PASSWORD: ${{ secrets.LEIN_PASSWORD }}
