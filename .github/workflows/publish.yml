@@ -37,3 +37,6 @@ jobs:
           JANK_GPG_SIGNING_KEY: ${{ secrets.JANK_GPG_SIGNING_KEY }}
       - name: Find and publish
         run: ${{ github.workspace }}/bin/publish ${{ github.event.before }} ${{ github.sha }} || exit 1
+        env:
+          LEIN_USERNAME: ${{ secrets.LEIN_USERNAME }}
+          LEIN_PASSWORD: ${{ secrets.LEIN_PASSWORD }}

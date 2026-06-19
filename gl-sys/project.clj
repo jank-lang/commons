@@ -5,6 +5,6 @@
             :url "https://www.mozilla.org/en-US/MPL/2.0/"}
   :plugins [[org.jank-lang/lein-jank "0.7"]]
   :middleware [leiningen.jank/middleware]
-  :repositories [["releases" {:url "https://repo.clojars.org"
-                              :username :env/lein_username
-                              :password :env/lein_password}]])
+  :repositories [["clojars" {:url "https://repo.clojars.org"
+                             :username :env/lein_username
+                             :password :env/lein_password}]])
