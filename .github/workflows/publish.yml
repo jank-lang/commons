@@ -23,6 +23,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: true
+          fetch-depth: 0
+          fetch-tags: 0
       - uses: awalsh128/cache-apt-pkgs-action@5902b33ae29014e6ca012c5d8025d4346556bd40
         with:
           packages: git gpg leiningen
@@ -34,4 +36,4 @@ jobs:
         env:
           JANK_GPG_SIGNING_KEY: ${{ secrets.JANK_GPG_SIGNING_KEY }}
       - name: Find and publish
-        run: ${{ github.workspace }}/bin/publish ${{ github.event.before }} ${{ github.sha }}
+        run: ${{ github.workspace }}/bin/publish ${{ github.event.before }} ${{ github.sha }} || exit 1
