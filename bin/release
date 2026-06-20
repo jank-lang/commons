@@ -63,6 +63,26 @@ do
   git add "${package}/project.clj"
 done
 
+echo "Showing diff before committing"
+git diff
+
+while true;
+do
+  read -r -p "Continue (y/n)? " should_continue
+  case "${should_continue}"
+  in
+    y|Y)
+      break
+      ;;
+    n|N)
+      exit 1
+      ;;
+    *)
+      echo "Invalid input."
+      ;;
+  esac
+done
+
 # We need to commit first, then tag.
 git commit -m "Release ${*}" -m "${details}"
 
