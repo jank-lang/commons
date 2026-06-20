@@ -64,8 +64,9 @@ do
 done
 
 echo "Showing diff before committing"
-git diff
+git diff --cached
 
+echo
 while true;
 do
   read -r -p "Continue (y/n)? " should_continue
@@ -75,6 +76,7 @@ do
       break
       ;;
     n|N)
+      echo "Exiting. Changes are still applied and will need manual resetting."
       exit 1
       ;;
     *)
