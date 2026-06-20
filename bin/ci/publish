@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+# This script is used by CI to detect which packages to publish to Clojars.
+#
+# Detection is done based on scanning the commits included in a push. For
+# each commit, we list the tags associated with that commit. Each tag corresponds
+# to a package + version pair which needs publishing. For example, we may
+# have a tag like `gl-sys/2026.06-2`, which says that the `gl-sys` package
+# has been updated to version `2026.06-2`.
+#
+# In order to create these tags, use `bin/release` locally, which will update
+# the package's version, create the tag, and push for you.
+
 set -euo pipefail
 
 previous="${1}"

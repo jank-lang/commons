@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+# This script updates package versions and creates release tags. It then
+# pushes to main, to trigger the publish, which happens in CI.
+#
+# Usage:
+# $ ./bin/release gl-sys glfw-sys
+
+set -euo pipefail
+
+# $1 = package to tag
+function tag
+{
+  local package version
+  package="${1}"
+  pushd "${package}" >/dev/null
+    version="$(lein update-in :version pr -- version | cut -d '"' -f 2)"
+    echo "Tagging ${package}/${version}"
+    git tag -f "${package}/${version}"
+  popd >/dev/null
+}
+
+function calver
+{
+  date +"%Y.%m"
+}
+
+# $1 = package to update
+function update_version
+{
+  local current_version current_version_date current_version_minor
+  local new_version new_version_date new_version_minor
+  pushd "${package}" >/dev/null
+    current_version="$(lein update-in :version pr -- version | cut -d '"' -f 2)"
+    current_version_date="${current_version%-*}"
+    current_version_minor="${current_version#*-}"
+    new_version_date="$(calver)"
+    new_version_minor=1
+    if [[ "${current_version_date}" == "${new_version_date}" ]];
+    then
+      new_version_minor=$((current_version_minor + 1))
+    fi
+    new_version="${new_version_date}-${new_version_minor}"
+    echo "${package} :: ${current_version} -> ${new_version}"
+    sed -i'' "s#org.jank-lang.commons/${package} \"${current_version}\"#org.jank-lang.commons/${package} \"${new_version}\"#" project.clj
+  popd >/dev/null
+}
+
+details=""
+for package in "${@}";
+do
+  details="${details}\n$(update_version "${package}")"
+  git add "${package}/project.clj"
+done
+
+git commit -m "Release ${*}" -m "${details}"
