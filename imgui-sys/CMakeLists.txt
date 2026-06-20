@@ -18,5 +18,8 @@ install(
   DIRECTORY lib/imgui/
   DESTINATION include
   FILES_MATCHING
+  PATTERN "backends" EXCLUDE
+  PATTERN "docs" EXCLUDE
+  PATTERN "examples" EXCLUDE
   PATTERN "*.h"
   PATTERN "*.hpp")
