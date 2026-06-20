@@ -76,7 +76,7 @@ do
       break
       ;;
     n|N)
-      echo "Exiting. Changes are still applied and will need manual resetting."
+      echo "Exiting. Changes are still staged and will need manual resetting."
       exit 1
       ;;
     *)
