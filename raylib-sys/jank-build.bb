@@ -1,7 +1,7 @@
 (require '[babashka.fs :as fs]
          '[jank.build.cmake :as cmake])
 
-(let [src-dir (fs/path (:src-dir *input*) "raylib")
+(let [src-dir (fs/path (:src-dir *input*) "lib" "raylib")
       out-dir (:out-dir *input*)
       input   (assoc *input* :src-dir src-dir)]
   (cmake/build input {:defines {"BUILD_EXAMPLES" false
