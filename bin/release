@@ -8,6 +8,8 @@
 
 set -euo pipefail
 
+# Creates a tag for a package, based on the version which is in the package's project.clj.
+#
 # $1 = package to tag
 function tag
 {
@@ -16,15 +18,20 @@ function tag
   pushd "${package}" >/dev/null
     version="$(lein update-in :version pr -- version | cut -d '"' -f 2)"
     echo "Tagging ${package}/${version}"
-    git tag -f "${package}/${version}"
+    git tag "${package}/${version}"
   popd >/dev/null
 }
 
+# Returns the date portion of a version string. i.e. 2026.06
 function calver
 {
   date +"%Y.%m"
 }
 
+# Updates the project.clj for a package to contain an updated version. Versions are based
+# on date and minor releases. If the current version is already on the same date, we increment
+# the minor release. Otherwise, we use the latest date and start at minor release 1.
+#
 # $1 = package to update
 function update_version
 {
@@ -46,11 +53,24 @@ function update_version
   popd >/dev/null
 }
 
+# First, update package project.clj files to have new versions.
+# We keep the full output of the changes in `details` so we can
+# provide it in the commit body.
 details=""
 for package in "${@}";
 do
-  details="${details}\n$(update_version "${package}")"
+  details+="$(update_version "${package}")"$'\n'
   git add "${package}/project.clj"
 done
 
+# We need to commit first, then tag.
 git commit -m "Release ${*}" -m "${details}"
+
+# Now that we have the commit, create a tag for each package.
+for package in "${@}";
+do
+  tag "${package}"
+done
+
+# Push so we can trigger CI to run the publish script.
+git push origin main --tags
