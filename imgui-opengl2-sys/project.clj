@@ -1,4 +1,4 @@
-(defproject org.jank-lang.commons/imgui-opengl2-sys "2026.06-1"
+(defproject org.jank-lang.commons/imgui-opengl2-sys "2026.06-2"
   :description "Raw package for Dear ImGUI OpenGL2 renderer backend."
   :url "https://github.com/jank-lang/commons"
   :license {:name "MPL 2.0"
