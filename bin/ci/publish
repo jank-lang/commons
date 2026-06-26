@@ -29,10 +29,10 @@ do
 done
 
 echo
+
 for package in "${to_publish[@]}";
 do
   name="${package%/*}"
-  version="${package#*/}"
 
   # Locally install every package first. That way, if we're publishing multiple packages
   # at a time, some of which depend on others, we have the latest version available already.
@@ -40,6 +40,12 @@ do
   pushd "${name}" >/dev/null
     lein install
   popd >/dev/null
+done
+
+for package in "${to_publish[@]}";
+do
+  name="${package%/*}"
+  version="${package#*/}"
 
   pushd "${name}" >/dev/null
     echo ":: Deploying ${name} with new version ${version}"
