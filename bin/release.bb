@@ -262,11 +262,9 @@
 
     (release! args all-projects updated-projects deps-of)
 
-    ; Stage all changed files so the user can review the full diff before
+    ; Apply all changed files so the user can review the full diff before
     ; we start making commits.
-    (doseq [project @updated-projects]
-      (git-stage-project! project))
-    (println "\nThe changes have been applied and staged.")
+    (println "\nThe changes have been applied.")
 
     (loop []
       (let [choice (do (print "Continue? (y/n) ")
