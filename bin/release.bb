@@ -179,12 +179,9 @@
 (defn git-stage-project! [project]
   (proc/shell ["git" "add" (str project "/project.clj")]))
 
-(defn git-commit-project! [original-all-projects new-all-projects project]
-  (let [original-version (get-in original-all-projects [project :version])
-        new-version      (get-in new-all-projects [project :version])]
-    (proc/shell ["git" "commit"
-                 "-m" (str "Release " project)
-                 "-m" (str project " :: " original-version " -> " new-version)])))
+(defn git-commit-project! [new-all-projects project]
+  (let [new-version (get-in new-all-projects [project :version])]
+    (proc/shell ["git" "commit" "-m" (str "Release " project " " new-version)])))
 
 (defn git-tag-project! [new-all-projects project]
   (let [version (get-in new-all-projects [project :version])]
@@ -282,7 +279,7 @@
       (println "\nCommitting in order:" (str/join " -> " ordered))
       (doseq [project ordered]
         (git-stage-project! project)
-        (git-commit-project! all-projects new-all-projects project)
+        (git-commit-project! new-all-projects project)
         (git-tag-project! new-all-projects project)))
 
     (git-push!)))
