@@ -126,7 +126,7 @@
                      (= (.getParentFile %) (io/file dir))))))
 
 (defn find-all-project-files
-  "Returns a map of {project-file-path -> project.clj-path-string} for every
+  "Returns a map of {dir-name -> project.clj-path-string} for every
   immediate subdirectory of cwd that contains a project.clj."
   []
   (into {}
@@ -143,36 +143,52 @@
     {:dir dir :path path :sym sym :version version}))
 
 (defn find-all-projects []
-  (let [all-project-files (find-all-project-files)
-        all-projects      (into {}
-                                (map (fn [[dir path]]
-                                       [dir (read-project-info dir path)])
-                                     all-project-files))]
-    all-projects))
+  (into {}
+        (map (fn [[dir path]]
+               [dir (read-project-info dir path)])
+             (find-all-project-files))))
+
+;; ---------------------------------------------------------------------------
+;; Topological sort (depth-first post-order)
+;;
+;; deps-of :: {project -> #{projects-it-depends-on-within-this-run}}
+;;
+;; Post-order DFS means a node is emitted only after all of its dependencies
+;; have been emitted, giving us the correct publish sequence.
+;; ---------------------------------------------------------------------------
+
+(defn topo-sort
+  "Returns nodes in dependency-first order given deps-of."
+  [nodes deps-of]
+  (let [visited (atom #{})
+        result  (atom [])]
+    (letfn [(visit [node]
+              (when-not (contains? @visited node)
+                (swap! visited conj node)
+                (doseq [dep (get deps-of node #{})]
+                  (visit dep))
+                (swap! result conj node)))]
+      (doseq [node nodes]
+        (visit node)))
+    @result))
 
 ;; ---------------------------------------------------------------------------
 ;; Git helpers
 ;; ---------------------------------------------------------------------------
 
-(defn git-stage-projects! [projects]
-  (doseq [project projects]
-    (proc/shell ["git" "add" (str project "/project.clj")])))
+(defn git-stage-project! [project]
+  (proc/shell ["git" "add" (str project "/project.clj")]))
 
-(defn git-commit! [original-all-projects new-all-projects projects]
-  (let [details (reduce (fn [acc project]
-                          (let [original-version (get-in original-all-projects [project :version])
-                                new-version (get-in new-all-projects [project :version])]
-                            (str acc project " :: " original-version " -> " new-version "\n")))
-                        ""
-                        projects)]
+(defn git-commit-project! [original-all-projects new-all-projects project]
+  (let [original-version (get-in original-all-projects [project :version])
+        new-version      (get-in new-all-projects [project :version])]
     (proc/shell ["git" "commit"
-                 "-m" (str "Release " (str/join " " projects) "")
-                 "-m" details])))
+                 "-m" (str "Release " project)
+                 "-m" (str project " :: " original-version " -> " new-version)])))
 
-(defn git-tag! [new-all-projects projects]
-  (doseq [project projects]
-    (let [version (get-in new-all-projects [project :version])]
-      (proc/shell ["git" "tag" (str project "/" version)]))))
+(defn git-tag-project! [new-all-projects project]
+  (let [version (get-in new-all-projects [project :version])]
+    (proc/shell ["git" "tag" (str project "/" version)])))
 
 (defn git-push! []
   (proc/shell ["git" "push" "origin" "main" "--tags"]))
@@ -194,11 +210,12 @@
 
 (defn release!
   "Releases a queue of project directories, propagating dependency bumps.
-  bumped-dirs is an atom holding the set of directories already bumped."
-  [initial-dirs all-projects updated-projects]
+  updated-projects is an atom :: #{dir}
+  deps-of          is an atom :: {dir -> #{dirs-this-dir-depends-on, within run}}"
+  [initial-dirs all-projects updated-projects deps-of]
   (loop [queue (vec initial-dirs)]
     (when-not (empty? queue)
-      (let [project        (first queue)
+      (let [project    (first queue)
             rest-queue (subvec queue 1)]
         (if (contains? @updated-projects project)
           ; Already handled, so we'll skip.
@@ -213,7 +230,8 @@
                                               " (" (:version info) " -> " new-version ")"))
 
                     ; Find all other projects that depend on this one and have
-                    ; not yet been bumped.
+                    ; not yet been bumped. Record the edge (dependent -> dependency)
+                    ; so topo-sort can order commits correctly.
                     dependents  (for [[other-dir other-info] all-projects
                                       :when (not= other-dir project)
                                       :when (not (contains? @updated-projects other-dir))
@@ -224,6 +242,8 @@
                                       :when changed?]
                                   (do
                                     (println (str "  Found and updated dependency in " other-dir))
+                                    ; other-dir depends on project; record that edge.
+                                    (swap! deps-of update other-dir (fnil conj #{}) project)
                                     other-dir))]
                 (recur (into rest-queue dependents))))))))))
 
@@ -232,15 +252,20 @@
 ;; ---------------------------------------------------------------------------
 
 (defn main [args]
-  (let [all-projects (find-all-projects)
-        missing      (remove #(contains? all-projects %) args)
-        updated-projects  (atom #{})]
+  (let [all-projects     (find-all-projects)
+        missing          (remove #(contains? all-projects %) args)
+        updated-projects (atom #{})
+        deps-of          (atom {})]
 
     (when-not (empty? missing)
       (throw (ex-info (str "Error: no project.clj found for: " (str/join ", " missing)) {})))
 
-    (release! args all-projects updated-projects)
-    (git-stage-projects! @updated-projects)
+    (release! args all-projects updated-projects deps-of)
+
+    ; Stage all changed files so the user can review the full diff before
+    ; we start making commits.
+    (doseq [project @updated-projects]
+      (git-stage-project! project))
     (println "\nThe changes have been applied and staged.")
 
     (loop []
@@ -252,10 +277,17 @@
           "n" (System/exit 1)
           (recur))))
 
-    (let [new-all-projects (find-all-projects)]
-      (git-commit! all-projects new-all-projects @updated-projects)
-      (git-tag! new-all-projects @updated-projects)
-      (git-push!))))
+    ; Commit and tag one project at a time, in dependency-first order, so
+    ; that CI sees tags in a sequence it can safely publish.
+    (let [new-all-projects (find-all-projects)
+          ordered          (topo-sort @updated-projects @deps-of)]
+      (println "\nCommitting in order:" (str/join " -> " ordered))
+      (doseq [project ordered]
+        (git-stage-project! project)
+        (git-commit-project! all-projects new-all-projects project)
+        (git-tag-project! new-all-projects project)))
+
+    (git-push!)))
 
 (comment
   (main ["jank-build-cmake"]))
