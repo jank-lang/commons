@@ -4,3 +4,6 @@
 [submodule "raylib-sys/lib/raylib"]
 	path = raylib-sys/lib/raylib
 	url = https://github.com/raysan5/raylib
+[submodule "ftxui-sys/lib/ftxui"]
+	path = ftxui-sys/lib/ftxui
+	url = https://github.com/ArthurSonzogni/FTXUI.git
