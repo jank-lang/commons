@@ -1,4 +1,4 @@
-(defproject org.jank-lang.commons/ftxui-sys "0.1-SNAPSHOT"
+(defproject org.jank-lang.commons/ftxui-sys "2026.06-1"
   :description "Raw package for FTXUI."
   :url "https://github.com/jank-lang/commons"
   :license {:name "MPL 2.0"
