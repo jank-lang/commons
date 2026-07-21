@@ -1,4 +1,4 @@
-(defproject org.jank-lang.commons/sqlite3-sys "0.1-SNAPSHOT"
+(defproject org.jank-lang.commons/sqlite3-sys "2026.07-1"
   :description "Raw package for sqlite3."
   :url "https://github.com/jank-lang/commons"
   :license {:name "MPL 2.0"
