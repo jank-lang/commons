@@ -1,4 +1,4 @@
-(defproject org.jank-lang.commons/raylib-sys "2026.06-7"
+(defproject org.jank-lang.commons/raylib-sys "2026.07-1"
   :description "Raw package for raylib."
   :url "https://github.com/jank-lang/commons"
   :license {:name "MPL 2.0"
