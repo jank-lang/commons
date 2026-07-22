@@ -1,8 +1,8 @@
 (ns jank.build.cmake
   (:require [babashka.process :as proc]))
 
-(defn default-defines [{:keys [out-dir optimization-level static-build]}]
-  {"BUILD_SHARED_LIBS"    (if static-build "OFF" "ON")
+(defn default-defines [{:keys [out-dir optimization-level static?]}]
+  {"BUILD_SHARED_LIBS"    (if static? "OFF" "ON")
    "CMAKE_BUILD_TYPE"     (if (pos? optimization-level) "Release" "Debug")
    "CMAKE_INSTALL_PREFIX" out-dir})
 
