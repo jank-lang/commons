@@ -27,6 +27,7 @@
             ninja
             pkg-config
             leiningen
+            babashka
 
             # Linting.
             shellcheck
