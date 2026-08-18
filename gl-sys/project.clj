@@ -1,4 +1,4 @@
-(defproject org.jank-lang.commons/gl-sys "2026.06-1"
+(defproject org.jank-lang.commons/gl-sys "2026.08-1"
   :description "Raw package for OpenGL."
   :url "https://github.com/jank-lang/commons"
   :license {:name "MPL 2.0"
