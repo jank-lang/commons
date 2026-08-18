@@ -5,6 +5,6 @@
             :url "https://www.mozilla.org/en-US/MPL/2.0/"}
   :build-dependencies [[org.jank-lang.commons/jank-build-cmake "2026.07-1"]]
   :dependencies []
-  :plugins [[org.jank-lang/lein-jank "0.7"]]
+  :plugins [[org.jank-lang/lein-jank "2026.07-3"]]
   :middleware [leiningen.jank/middleware]
   :verbatim-paths ["lib/imgui" "CMakeLists.txt"])
