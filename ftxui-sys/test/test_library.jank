@@ -1,0 +1,7 @@
+(ns test-library
+  (:require [clojure.test :as t])
+  (:include "ftxui/ftxui.hpp"))
+
+(t/deftest lirary-symbol
+  (cpp/ftxui.string_width "hello world")
+  nil)

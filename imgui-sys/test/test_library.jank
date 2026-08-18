@@ -1,0 +1,7 @@
+(ns test-library
+  (:require [clojure.test :as t])
+  (:include "imgui.h"))
+
+(t/deftest get-version
+  (cpp/ImGui.GetVersion)
+  nil)
