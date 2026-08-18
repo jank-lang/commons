@@ -30,6 +30,8 @@ done
 
 echo
 
+error=0
+
 for package in "${to_publish[@]}";
 do
   name="${package%/*}"
@@ -37,6 +39,13 @@ do
 
   pushd "${name}" >/dev/null
     echo ":: Deploying ${name} with new version ${version}"
-    lein deploy
+    lein deploy || error=1
+    echo
   popd >/dev/null
 done
+
+if [[ "${error}" != 0 ]];
+then
+  exit "${error}"
+fi
+
