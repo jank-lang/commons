@@ -1,4 +1,4 @@
-(defproject org.jank-lang.commons/box2d-sys "0.1-SNAPSHOT"
+(defproject org.jank-lang.commons/box2d-sys "2026.08-1"
   :description "Raw package for box2d."
   :url "https://github.com/jank-lang/commons"
   :license {:name "MPL 2.0"
