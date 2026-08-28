@@ -15,6 +15,9 @@ add_library(imgui_glfw "${IMGUI_SYS_ROOT}/backends/imgui_impl_glfw.cpp")
 target_include_directories(
   imgui_glfw PUBLIC "${IMGUI_SYS_ROOT}/include"
                     "${IMGUI_SYS_ROOT}/backends")
+target_link_directories(
+  imgui_glfw PUBLIC "${IMGUI_SYS_ROOT}/lib")
+target_link_libraries(imgui_glfw PUBLIC imgui glfw)
 
 install(
   TARGETS imgui_glfw

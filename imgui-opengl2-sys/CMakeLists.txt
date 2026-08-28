@@ -15,7 +15,9 @@ add_library(imgui_opengl2 "${IMGUI_SYS_ROOT}/backends/imgui_impl_opengl2.cpp")
 target_include_directories(
   imgui_opengl2 PUBLIC "${IMGUI_SYS_ROOT}/include"
                        "${IMGUI_SYS_ROOT}/backends")
-target_link_libraries(imgui_opengl2 PUBLIC OpenGL::GL)
+target_link_directories(
+  imgui_opengl2 PUBLIC "${IMGUI_SYS_ROOT}/lib")
+target_link_libraries(imgui_opengl2 PUBLIC imgui OpenGL::GL)
 
 install(
   TARGETS imgui_opengl2
