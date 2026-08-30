@@ -28,6 +28,8 @@ general process for creating a package looks like this.
 
 From there, follow this checklist:
 
+- Copy the `template` directory to your own and then work through the TODOs in
+  there
 - When you submit your initial package, please keep the version as `0.1-SNAPSHOT`.
   jank's release tooling will assign it a correct version after merging.
 - Set your package's license to match the packaged library
