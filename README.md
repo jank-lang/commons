@@ -37,7 +37,7 @@ From there, follow this checklist:
   - Ensure that your `:verbatim-paths` includes as little as possible of the
     library
 - Add a working `example` which will serve also as a test in CI; it will only be
-  compiled, not executed
+  compiled, not executed. See [raygui-sys](./raygui-sys/example) for example.
 - Also add a PR to [awesome-jank](https://github.com/jank-lang/awesome-jank) to
   add your new library
 
