@@ -1,4 +1,4 @@
-# template
+# TODO
 [![Clojars Project](https://img.shields.io/clojars/v/org.jank-lang.commons/TODO.svg)]
 TODO description.
 
