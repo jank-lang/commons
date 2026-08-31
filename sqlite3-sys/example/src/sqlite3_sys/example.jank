@@ -1,0 +1,5 @@
+(ns sqlite3-sys.example
+  (:include "sqlite3.h"))
+
+(defn -main [& args]
+  (println (cpp/sqlite3_libversion)))

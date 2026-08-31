@@ -1,0 +1,32 @@
+(ns imgui-glfw-sys.example
+  (:include "GLFW/glfw3.h"
+            "imgui.h"
+            "imgui_impl_glfw.h"
+            "imgui_impl_opengl2.h"))
+
+(defn -main []
+  (cpp/glfwInit)
+
+  (let [window* (cpp/glfwCreateWindow 400 300
+                                      "jank"
+                                      cpp/nullptr cpp/nullptr)]
+    (cpp/glfwMakeContextCurrent window*)
+    (cpp/ImGui.CreateContext)
+    (cpp/ImGui_ImplGlfw_InitForOpenGL window* true)
+    (cpp/ImGui_ImplOpenGL2_Init)
+
+    (while (cpp/! (cpp/glfwWindowShouldClose window*))
+      (cpp/glfwPollEvents)
+      (cpp/ImGui_ImplOpenGL2_NewFrame)
+      (cpp/ImGui_ImplGlfw_NewFrame)
+      (cpp/ImGui.NewFrame)
+
+      (when (cpp/ImGui.Begin "jank")
+        (cpp/ImGui.Text "Hello, jank and imgui!"))
+      (cpp/ImGui.End)
+
+      (cpp/ImGui.Render)
+      (cpp/ImGui_ImplOpenGL2_RenderDrawData (cpp/ImGui.GetDrawData))
+      (cpp/glfwSwapBuffers window*))
+
+    (cpp/glfwTerminate)))
