@@ -18,6 +18,7 @@ endif()
 # through its own raylib-sys dependency, rather than a second copy.
 add_library(raygui raygui_impl.c)
 target_include_directories(raygui PUBLIC lib/raygui/src
+                                         "${RAYLIB_SYS_ROOT}/src"
                                          "${RAYLIB_SYS_ROOT}/include")
 
 install(

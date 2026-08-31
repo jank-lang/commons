@@ -1,6 +1,7 @@
 (ns test-library
   (:require [clojure.test :as t])
-  (:include "raylib.h" "raygui.h"))
+  (:include "raylib.h"
+            "raygui.h"))
 
 (t/deftest library-symbol
   (cpp/GuiSetState 2)
