@@ -1,5 +1,6 @@
 # box2d-sys
-[![Clojars Project](https://img.shields.io/clojars/v/org.jank-lang.commons/box2d-sys.svg)]
+[![Clojars Project](https://img.shields.io/clojars/v/org.jank-lang.commons/box2d-sys.svg)](https://releases.clojars.org/org.jank-lang.commons/box2d-sys)
+
 Raw package for box2d.
 
 ## Usage

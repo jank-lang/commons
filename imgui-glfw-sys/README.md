@@ -1,5 +1,6 @@
 # imgui-glfw-sys
-[![Clojars Project](https://img.shields.io/clojars/v/org.jank-lang.commons/imgui-glfw-sys.svg)]
+[![Clojars Project](https://img.shields.io/clojars/v/org.jank-lang.commons/imgui-glfw-sys.svg)](https://releases.clojars.org/org.jank-lang.commons/imgui-glfw-sys)
+
 Raw package for Dear ImGUI GLFW platform backend.
 
 ## Usage

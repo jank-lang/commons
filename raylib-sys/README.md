@@ -1,5 +1,6 @@
 # raylib-sys
-[![Clojars Project](https://img.shields.io/clojars/v/org.jank-lang.commons/raylib-sys.svg)]
+[![Clojars Project](https://img.shields.io/clojars/v/org.jank-lang.commons/raylib-sys.svg)](https://releases.clojars.org/org.jank-lang.commons/raylib-sys)
+
 Raw package for raylib.
 
 ## Usage

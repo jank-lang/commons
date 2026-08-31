@@ -1,5 +1,6 @@
 # ftxui-sys
-[![Clojars Project](https://img.shields.io/clojars/v/org.jank-lang.commons/ftxui-sys.svg)]
+[![Clojars Project](https://img.shields.io/clojars/v/org.jank-lang.commons/ftxui-sys.svg)](https://releases.clojars.org/org.jank-lang.commons/ftxui-sys)
+
 Raw package for FTXUI.
 
 ## Usage

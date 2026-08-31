@@ -1,5 +1,6 @@
 # glfw-sys
-[![Clojars Project](https://img.shields.io/clojars/v/org.jank-lang.commons/glfw-sys.svg)]
+[![Clojars Project](https://img.shields.io/clojars/v/org.jank-lang.commons/glfw-sys.svg)](https://releases.clojars.org/org.jank-lang.commons/glfw3-sys)
+
 Raw package for glfw3.
 
 ## Usage

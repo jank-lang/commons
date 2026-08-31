@@ -1,5 +1,6 @@
 # sqlite3-sys
-[![Clojars Project](https://img.shields.io/clojars/v/org.jank-lang.commons/sqlite3-sys.svg)]
+[![Clojars Project](https://img.shields.io/clojars/v/org.jank-lang.commons/sqlite3-sys.svg)](https://releases.clojars.org/org.jank-lang.commons/sqlite3-sys)
+
 Raw package for sqlite3.
 
 ## Usage
