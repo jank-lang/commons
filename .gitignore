@@ -6,3 +6,4 @@ pom.xml
 .clj-kondo
 .lsp
 .nrepl-port
+.gdb_history
