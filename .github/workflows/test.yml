@@ -26,9 +26,9 @@ jobs:
           submodules: true
       - uses: awalsh128/cache-apt-pkgs-action@5902b33ae29014e6ca012c5d8025d4346556bd40
         with:
-          packages: leiningen build-essential pkg-config ninja-build cmake libopengl-dev libglfw3-dev libsqlite3-dev
+          packages: leiningen bubblewrap build-essential pkg-config ninja-build cmake libopengl-dev libglfw3-dev libsqlite3-dev
           # Increment this when the package list changes.
-          version: 2
+          version: 3
       - name: Install jank
         run: |
           sudo apt install -y curl gnupg lsb-release
@@ -38,6 +38,9 @@ jobs:
           sudo apt install -y jank
       - name: Test packages
         run: |
+          curl -sL -o install-bb https://raw.githubusercontent.com/babashka/babashka/master/install
+          chmod +x install-bb
+          sudo ./install-bb
           for dir in */example;
           do
             cd "${dir}"
@@ -67,6 +70,9 @@ jobs:
           brew install jank-lang/jank/jank clojure/tools/clojure
       - name: Test packages
         run: |
+          curl -sL -o install-bb https://raw.githubusercontent.com/babashka/babashka/master/install
+          chmod +x install-bb
+          sudo ./install-bb
           for dir in */example;
           do
             cd "${dir}"
