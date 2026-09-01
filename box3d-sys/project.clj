@@ -1,4 +1,4 @@
-(defproject org.jank-lang.commons/box3d-sys "2026.08-1"
+(defproject org.jank-lang.commons/box3d-sys "2026.09-1"
   :description "Raw package for box3d."
   :url "https://github.com/jank-lang/commons"
   :license {:name "MIT"
