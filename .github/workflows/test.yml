@@ -26,9 +26,9 @@ jobs:
           submodules: true
       - uses: awalsh128/cache-apt-pkgs-action@5902b33ae29014e6ca012c5d8025d4346556bd40
         with:
-          packages: curl git build-essential pkg-config ninja-build cmake libopengl-dev libglfw3-dev libsqlite3-dev
+          packages: leiningen build-essential pkg-config ninja-build cmake libopengl-dev libglfw3-dev libsqlite3-dev
           # Increment this when the package list changes.
-          version: 1
+          version: 2
       - name: Install jank
         run: |
           sudo apt install -y curl gnupg lsb-release
@@ -42,6 +42,7 @@ jobs:
           do
             cd "${dir}"
             lein compile || jank_error=1
+            cd -
           done
           if [[ "${jank_error}" == 1 ]];
           then
@@ -60,7 +61,7 @@ jobs:
           submodules: true
       - name: Install Homebrew deps
         run: |
-          brew install git pkg-config ninja cmake glfw sqlite3
+          brew install leiningen pkg-config ninja cmake glfw sqlite3
       - name: Install jank
         run: |
           brew install jank-lang/jank/jank clojure/tools/clojure
@@ -70,6 +71,7 @@ jobs:
           do
             cd "${dir}"
             lein compile || jank_error=1
+            cd -
           done
           if [[ "${jank_error}" == 1 ]];
           then
