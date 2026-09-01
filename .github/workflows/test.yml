@@ -26,9 +26,20 @@ jobs:
           submodules: true
       - uses: awalsh128/cache-apt-pkgs-action@5902b33ae29014e6ca012c5d8025d4346556bd40
         with:
-          packages: leiningen bubblewrap build-essential pkg-config ninja-build cmake libopengl-dev libglfw3-dev libsqlite3-dev
+          packages: >
+            leiningen
+            bubblewrap
+            build-essential
+            pkg-config
+            ninja-build
+            cmake
+            libopengl-dev
+            libgl1-mesa-dev
+            libglfw3-dev
+            libsqlite3-dev
+            libxinerama-dev
           # Increment this when the package list changes.
-          version: 3
+          version: 4
       - name: Install jank
         run: |
           sudo apt install -y curl gnupg lsb-release
@@ -36,6 +47,7 @@ jobs:
           echo "deb [signed-by=/etc/apt/trusted.gpg.d/jank.gpg] https://ppa.jank-lang.org $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/jank.list >/dev/null
           sudo apt update
           sudo apt install -y jank
+          jank check-health
       - name: Cache ~/.m2
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684
         with:
@@ -78,7 +90,8 @@ jobs:
           brew install leiningen llvm pkg-config ninja cmake glfw sqlite3
       - name: Install jank
         run: |
-          brew install jank-lang/jank/jank clojure/tools/clojure
+          brew install jank-lang/jank/jank
+          jank check-health
       - name: Cache ~/.m2
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684
         with:
