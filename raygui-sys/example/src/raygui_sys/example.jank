@@ -1,0 +1,16 @@
+(ns raygui-sys.example
+  (:include "raylib.h"
+            "raygui.h"))
+
+(defn -main [& args]
+  (cpp/InitWindow 400 200 "raygui")
+  (cpp/SetTargetFPS 60)
+
+  (while (cpp/! (cpp/WindowShouldClose))
+    (cpp/BeginDrawing)
+    (cpp/ClearBackground (cpp/GetColor (cpp/GuiGetStyle cpp/DEFAULT cpp/BACKGROUND_COLOR)))
+    (when-not (zero? (cpp/GuiButton (cpp/Rectangle 100 60 200 80) "Click me!"))
+      (println "Button clicked!"))
+    (cpp/EndDrawing))
+
+  (cpp/CloseWindow))

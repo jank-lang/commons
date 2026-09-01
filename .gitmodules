@@ -13,3 +13,6 @@
 [submodule "box2d-sys/lib/box2d"]
 	path = box2d-sys/lib/box2d
 	url = https://github.com/erincatto/box2d
+[submodule "raygui-sys/lib/raygui"]
+	path = raygui-sys/lib/raygui
+	url = https://github.com/raysan5/raygui
