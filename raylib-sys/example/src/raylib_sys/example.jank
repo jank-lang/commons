@@ -1,4 +1,4 @@
-(ns example.main
+(ns raylib-sys.example
   (:include "raylib.h"))
 
 (defn -main [& args]
