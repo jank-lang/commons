@@ -36,11 +36,18 @@ jobs:
           echo "deb [signed-by=/etc/apt/trusted.gpg.d/jank.gpg] https://ppa.jank-lang.org $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/jank.list >/dev/null
           sudo apt update
           sudo apt install -y jank
+      - name: Cache Clang/LLVM
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684
+        with:
+          path: ~/.m2
+          key: m2-${{ runner.os }}
       - name: Test packages
         run: |
           curl -sL -o install-bb https://raw.githubusercontent.com/babashka/babashka/master/install
           chmod +x install-bb
           sudo ./install-bb
+          which bb
+
           for dir in */example;
           do
             cd "${dir}"
@@ -57,6 +64,8 @@ jobs:
     runs-on: macos-26
     env:
       HOMEBREW_NO_AUTO_UPDATE: 1
+      CC: clang
+      CXX: clang++
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
@@ -64,15 +73,22 @@ jobs:
           submodules: true
       - name: Install Homebrew deps
         run: |
-          brew install leiningen pkg-config ninja cmake glfw sqlite3
+          brew install leiningen clang pkg-config ninja cmake glfw sqlite3
       - name: Install jank
         run: |
           brew install jank-lang/jank/jank clojure/tools/clojure
+      - name: Cache Clang/LLVM
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684
+        with:
+          path: ~/.m2
+          key: m2-${{ runner.os }}
       - name: Test packages
         run: |
           curl -sL -o install-bb https://raw.githubusercontent.com/babashka/babashka/master/install
           chmod +x install-bb
           sudo ./install-bb
+          which bb
+
           for dir in */example;
           do
             cd "${dir}"
