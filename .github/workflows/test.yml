@@ -36,11 +36,13 @@ jobs:
           echo "deb [signed-by=/etc/apt/trusted.gpg.d/jank.gpg] https://ppa.jank-lang.org $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/jank.list >/dev/null
           sudo apt update
           sudo apt install -y jank
-      - name: Cache Clang/LLVM
+      - name: Cache ~/.m2
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684
         with:
           path: ~/.m2
           key: m2-${{ runner.os }}
+      - name: Allow unprivileged user namespaces (bubblewrap loopback fix)
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Test packages
         run: |
           curl -sL -o install-bb https://raw.githubusercontent.com/babashka/babashka/master/install
@@ -77,11 +79,15 @@ jobs:
       - name: Install jank
         run: |
           brew install jank-lang/jank/jank clojure/tools/clojure
-      - name: Cache Clang/LLVM
+      - name: Cache ~/.m2
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684
         with:
           path: ~/.m2
           key: m2-${{ runner.os }}
+      - name: Select Xcode
+        run: |
+          sudo xcode-select -switch /Applications/Xcode.app/Contents/Developer
+          echo "SDKROOT=$(xcrun --sdk macosx --show-sdk-path)" >> $GITHUB_ENV
       - name: Test packages
         run: |
           curl -sL -o install-bb https://raw.githubusercontent.com/babashka/babashka/master/install
