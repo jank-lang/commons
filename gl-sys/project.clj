@@ -1,4 +1,4 @@
-(defproject org.jank-lang.commons/gl-sys "2026.08-2"
+(defproject org.jank-lang.commons/gl-sys "2026.09-1"
   :description "Raw package for OpenGL."
   :url "https://github.com/jank-lang/commons"
   :license {:name "MIT"
