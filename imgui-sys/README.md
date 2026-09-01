@@ -7,7 +7,7 @@ Raw package for Dear ImGUI.
 Add this project to your Leiningen `:dependencies` vector:
 
 ```clojure
-[org.jank-lang.commons/imgui-sys "2026.08-2"]
+[org.jank-lang.commons/imgui-sys "2026.09-1"]
 ```
 
 ## Example
