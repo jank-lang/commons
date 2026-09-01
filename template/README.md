@@ -11,4 +11,9 @@ Add this project to your Leiningen `:dependencies` vector:
 
 ## Example
 You can find an example project [here](./example). You're welcome to copy this
-to get started!
+to get started! To run the example project, use Leiningen:
+
+```bash
+cd example
+lein run
+```
