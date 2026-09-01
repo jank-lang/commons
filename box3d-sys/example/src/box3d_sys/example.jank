@@ -1,0 +1,40 @@
+(ns box3d-sys.example
+  (:include "box3d/box3d.h"))
+
+(defn -main [& args]
+  (let [world-def (cpp/b3DefaultWorldDef)
+        _ (cpp/= (.-gravity world-def) (cpp/b3Vec3 0.0 -10.0 0.0))
+        world-id (cpp/b3CreateWorld (cpp/& world-def))
+
+        ground-body-def (cpp/b3DefaultBodyDef)
+        _ (cpp/= (.-position ground-body-def) (cpp/b3Vec3 0.0 -10.0 0.0))
+        ground-id (cpp/b3CreateBody world-id (cpp/& ground-body-def))
+
+        ground-box (cpp/b3MakeBoxHull 50.0 10.0 50.0)
+        ground-shape-def (cpp/b3DefaultShapeDef)
+        _ (cpp/b3CreateHullShape ground-id (cpp/& ground-shape-def) (cpp/& (.-base ground-box)))
+
+        body-def (cpp/b3DefaultBodyDef)
+        _ (cpp/= (.-type body-def) cpp/b3_dynamicBody)
+        _ (cpp/= (.-position body-def) (cpp/b3Vec3 0.0 4.0 0.0))
+        body-id (cpp/b3CreateBody world-id (cpp/& body-def))
+
+        dynamic-box (cpp/b3MakeCubeHull 1.0)
+        shape-def (cpp/b3DefaultShapeDef)
+        _ (cpp/= (.-density shape-def) 1.0)
+        _ (cpp/= (.-friction (.-baseMaterial shape-def)) 0.3)
+        _ (cpp/b3CreateHullShape body-id (cpp/& shape-def) (cpp/& (.-base dynamic-box)))
+
+        time-step (/ 1.0 60.0)
+        sub-step-count 4
+
+        position (cpp/b3Body_GetPosition body-id)
+        rotation (cpp/b3Body_GetRotation body-id)]
+    (dotimes [_ 90]
+      (cpp/b3World_Step world-id time-step sub-step-count)
+      (cpp/= position (cpp/b3Body_GetPosition body-id))
+      (cpp/= rotation (cpp/b3Body_GetRotation body-id))
+
+      (println (format "{} {} {}" (.-x position) (.-y position) (cpp/b3GetQuatAngle rotation))))
+
+    (cpp/b3DestroyWorld world-id)))

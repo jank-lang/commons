@@ -1,0 +1,29 @@
+(ns sqlite3-sys.example
+  (:include "sqlite3.h"))
+
+(defn -main [& args]
+  (let [db (#cpp (:* sqlite3))]
+    (cpp/sqlite3_open ":memory:" (cpp/& db))
+    (try
+      (cpp/sqlite3_exec db
+                        (str "CREATE TABLE tasks (id INTEGER PRIMARY KEY, title TEXT NOT NULL);"
+                             "INSERT INTO tasks (title) VALUES ('Learn jank!');"
+                             "INSERT INTO tasks (title) VALUES ('Use SQLite.');"
+                             "INSERT INTO tasks (title) VALUES ('Build amazing things!');")
+                        cpp/nullptr
+                        cpp/nullptr
+                        cpp/nullptr)
+      (let [statement (#cpp (:* sqlite3_stmt))]
+        (cpp/sqlite3_prepare_v2 db
+                                "SELECT id, title FROM tasks ORDER BY id"
+                                -1
+                                (cpp/& statement)
+                                cpp/nullptr)
+        (try
+          (while (cpp/== cpp/SQLITE_ROW (cpp/sqlite3_step statement))
+            (println (cpp/sqlite3_column_int statement 0)
+                     (cpp/unsafe-cast (:* (:const char)) (cpp/sqlite3_column_text statement 1))))
+          (finally
+            (cpp/sqlite3_finalize statement))))
+      (finally
+        (cpp/sqlite3_close db)))))

@@ -1,7 +1,0 @@
-(ns test-library
-  (:require [clojure.test :as t])
-  (:include "box3d/box3d.h"))
-
-(t/deftest get-version
-  (cpp/b3GetVersion)
-  nil)

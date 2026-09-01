@@ -1,7 +1,0 @@
-(ns test-library
-  (:require [clojure.test :as t])
-  (:include "raylib.h"))
-
-(t/deftest library-symbol
-  (cpp/Vector3 0.0 0.0 0.0)
-  nil)

@@ -5,3 +5,5 @@ pom.xml
 # Tooling.
 .clj-kondo
 .lsp
+.nrepl-port
+.gdb_history

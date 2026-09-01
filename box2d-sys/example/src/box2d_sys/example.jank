@@ -1,0 +1,43 @@
+(ns box2d-sys.example
+  (:include "box2d/box2d.h"))
+
+(defn -main [& args]
+  (let [world-def (cpp/b2DefaultWorldDef)
+        _ (cpp/= (.-gravity world-def) (cpp/b2Vec2 0.0 -10.0))
+        world-id (cpp/b2CreateWorld (cpp/& world-def))
+
+        ground-body-def (cpp/b2DefaultBodyDef)
+        _ (cpp/= (.-position ground-body-def) (cpp/b2Vec2 0.0 -10.0))
+        ground-id (cpp/b2CreateBody world-id (cpp/& ground-body-def))
+
+        ground-box (cpp/b2MakeBox 50.0 10.0)
+        ground-shape-def (cpp/b2DefaultShapeDef)
+        _ (cpp/b2CreatePolygonShape ground-id (cpp/& ground-shape-def) (cpp/& ground-box))
+
+        body-def (cpp/b2DefaultBodyDef)
+        _ (cpp/= (.-type body-def) cpp/b2_dynamicBody)
+        _ (cpp/= (.-position body-def) (cpp/b2Vec2 0.0 4.0))
+        body-id (cpp/b2CreateBody world-id (cpp/& body-def))
+
+        dynamic-box (cpp/b2MakeBox 1.0 1.0)
+        shape-def (cpp/b2DefaultShapeDef)
+        _ (cpp/= (.-density shape-def) 1.0)
+        _ (cpp/= (.-friction (.-material shape-def)) 0.3)
+        _ (cpp/b2CreatePolygonShape body-id (cpp/& shape-def) (cpp/& dynamic-box))
+
+        time-step (/ 1.0 60.0)
+        sub-step-count 4
+
+        position (cpp/b2Body_GetPosition body-id)
+        rotation (cpp/b2Body_GetRotation body-id)]
+    (dotimes [_ 90]
+      (cpp/b2World_Step world-id time-step sub-step-count)
+      (cpp/= position (cpp/b2Body_GetPosition body-id))
+      (cpp/= rotation (cpp/b2Body_GetRotation body-id))
+
+      (println (format "{} {} {}"
+                       (.-x position)
+                       (.-y position)
+                       (cpp/b2Rot_GetAngle rotation))))
+
+    (cpp/b2DestroyWorld world-id)))

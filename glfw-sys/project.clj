@@ -1,8 +1,8 @@
-(defproject org.jank-lang.commons/glfw-sys "2026.08-1"
+(defproject org.jank-lang.commons/glfw-sys "2026.09-1"
   :description "Raw package for glfw3."
   :url "https://github.com/jank-lang/commons"
-  :license {:name "MPL 2.0"
-            :url "https://www.mozilla.org/en-US/MPL/2.0/"}
+  :license {:name "zlib/libpng"
+            :url "https://github.com/glfw/glfw/blob/master/LICENSE.md"}
   :plugins [[org.jank-lang/lein-jank "2026.07-3"]]
   :middleware [leiningen.jank/middleware]
   :build-dependencies [[org.jank-lang.commons/jank-build-pkg-config "2026.06-1"]])

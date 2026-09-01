@@ -1,7 +1,5 @@
 #!/usr/bin/env bb
 
-;; XXX: I originally generated this with Claude and then tested it and built upon it.
-
 ;; This script updates package versions and creates release tags. It then
 ;; pushes to main, to trigger the publish, which happens in CI.
 ;;
@@ -114,6 +112,19 @@
       (spit path result)
       true)))
 
+(defn update-readme-dependency!
+  "Updates artifact's dependency coordinate in the README at path.
+  Returns true if the file changed."
+  [path artifact-sym new-version]
+  (let [original (slurp path)
+        pattern  (re-pattern (str "(\\["
+                                  (java.util.regex.Pattern/quote (str artifact-sym))
+                                  "\\s+\")[^\"]+(\"\\])"))
+        result   (str/replace original pattern (str "$1" new-version "$2"))]
+    (when (not= original result)
+      (spit path result)
+      true)))
+
 ;; ---------------------------------------------------------------------------
 ;; Project discovery
 ;; ---------------------------------------------------------------------------
@@ -148,6 +159,15 @@
                [dir (read-project-info dir path)])
              (find-all-project-files))))
 
+(defn find-all-example-project-files
+  "Returns the paths of example/project.clj files in immediate subdirectories."
+  []
+  (keep (fn [dir]
+          (let [path (io/file dir "example" "project.clj")]
+            (when (.exists path)
+              (.getPath path))))
+        (immediate-subdirs ".")))
+
 ;; ---------------------------------------------------------------------------
 ;; Topological sort (depth-first post-order)
 ;;
@@ -176,8 +196,12 @@
 ;; Git helpers
 ;; ---------------------------------------------------------------------------
 
-(defn git-stage-project! [project]
-  (proc/shell ["git" "add" (str project "/project.clj")]))
+(defn git-stage-project! [project example-project-files]
+  (proc/shell ["git" "add"
+               (str project "/project.clj")
+               (str project "/README.md")])
+  (when-not (empty? example-project-files)
+    (proc/shell (into ["git" "add"] example-project-files))))
 
 (defn git-commit-project! [new-all-projects project]
   (let [new-version (get-in new-all-projects [project :version])]
@@ -195,15 +219,35 @@
 ;; ---------------------------------------------------------------------------
 
 (defn do-bump!
-  "Bumps the version in project.clj at path. Returns the new version string."
-  [path current-version]
+  "Bumps the version in project.clj and its README dependency coordinate.
+  Returns the new version string."
+  [path project-sym current-version]
   (let [ym          (current-year-month)
         new-version (bump-version current-version ym)
         text        (slurp path)
         zloc        (z/of-string text)
         updated     (set-project-version zloc new-version)]
     (spit path updated)
+    (update-readme-dependency! (str (.getParent (io/file path)) "/README.md")
+                               project-sym
+                               new-version)
     new-version))
+
+(defn update-example-dependencies!
+  "Updates all jank commons dependencies in every example/project.clj.
+  Returns the paths of example project files that changed."
+  [all-projects]
+  (reduce (fn [changed path]
+            (let [changed? (reduce (fn [updated {:keys [sym version]}]
+                                     (or (update-dependency-in-file! path sym version)
+                                         updated))
+                                   false
+                                   (vals all-projects))]
+              (if changed?
+                (conj changed path)
+                changed)))
+          []
+          (find-all-example-project-files)))
 
 (defn release!
   "Releases a queue of project directories, propagating dependency bumps.
@@ -221,7 +265,7 @@
             (if-not info
               ; No project.clj found in this dir, so we'll skip.
               (recur rest-queue)
-              (let [new-version (do-bump! (:path info) (:version info))
+              (let [new-version (do-bump! (:path info) (:sym info) (:version info))
                     _           (swap! updated-projects conj project)
                     _           (println (str "Updated " project
                                               " (" (:version info) " -> " new-version ")"))
@@ -259,30 +303,34 @@
 
     (release! args all-projects updated-projects deps-of)
 
-    ; Apply all changed files so the user can review the full diff before
-    ; we start making commits.
-    (println "\nThe changes have been applied.")
+    (let [changed-examples (update-example-dependencies! (find-all-projects))]
+      (doseq [path changed-examples]
+        (println (str "Updated dependency in " path)))
 
-    (loop []
-      (let [choice (do (print "Continue? (y/n) ")
-                       (flush)
-                       (read-line))]
-        (case choice
-          "y" nil
-          "n" (System/exit 1)
-          (recur))))
+      ; Apply all changed files so the user can review the full diff before
+      ; we start making commits.
+      (println "\nThe changes have been applied.")
 
-    ; Commit and tag one project at a time, in dependency-first order, so
-    ; that CI sees tags in a sequence it can safely publish.
-    (let [new-all-projects (find-all-projects)
-          ordered          (topo-sort @updated-projects @deps-of)]
-      (println "\nCommitting in order:" (str/join " -> " ordered))
-      (doseq [project ordered]
-        (git-stage-project! project)
-        (git-commit-project! new-all-projects project)
-        (git-tag-project! new-all-projects project)))
+      (loop []
+        (let [choice (do (print "Ready to commit? (y/n) ")
+                         (flush)
+                         (read-line))]
+          (case choice
+            "y" nil
+            "n" (System/exit 1)
+            (recur))))
 
-    (git-push!)))
+      ; Commit and tag one project at a time, in dependency-first order, so
+      ; that CI sees tags in a sequence it can safely publish.
+      (let [new-all-projects (find-all-projects)
+            ordered          (topo-sort @updated-projects @deps-of)]
+        (println "\nCommitting in order:" (str/join " -> " ordered))
+        (doseq [[index project] (map-indexed vector ordered)]
+          (git-stage-project! project (if (zero? index) changed-examples []))
+          (git-commit-project! new-all-projects project)
+          (git-tag-project! new-all-projects project)))
+
+      (git-push!))))
 
 (comment
   (main ["jank-build-cmake"]))

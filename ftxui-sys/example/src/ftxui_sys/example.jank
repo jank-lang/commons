@@ -1,0 +1,54 @@
+(ns ftxui-sys.example
+  (:include "ftxui/dom/elements.hpp"
+            "ftxui/screen/screen.hpp"
+            "ftxui/screen/string.hpp"))
+
+(declare vbox)
+(declare hbox)
+
+(defn hiccup->element [h]
+  (cond
+    (= :text (first h)) (cpp/box (->> (str (second h))
+                                      (cpp/cast cpp/std.string)
+                                      cpp/ftxui.text
+                                      (cpp/new cpp/ftxui.Element)))
+    (= :filler (first h)) (cpp/box (cpp/new cpp/ftxui.Element (cpp/ftxui.filler)))
+    (= :vbox (first h)) (apply vbox (rest h))
+    (= :hbox (first h)) (apply hbox (rest h))))
+
+(defmacro defbox [name f]
+  `(defn ~name [& hiccup#]
+     (let [elements# (cpp/ftxui.Elements.)]
+       (doseq [h# hiccup#]
+         (let [e# (cpp/* (cpp/unbox (:* ftxui.Element) (hiccup->element h#)))]
+           (cpp/.push_back elements# e#)))
+       (cpp/box (cpp/new cpp/ftxui.Element (~f elements#))))))
+(defbox hbox cpp/ftxui.hbox)
+(defbox vbox cpp/ftxui.vbox)
+
+(defn render-hiccup [hiccup]
+  (let [document (->> (hiccup->element hiccup)
+                      (cpp/unbox (:* ftxui.Element))
+                      cpp/*)
+        screen (cpp/ftxui.Screen.Create (cpp/ftxui.Dimension.Fixed 60)
+                                        (cpp/ftxui.Dimension.Fixed 20))]
+    (cpp/ftxui.Render screen document)
+    (.Print screen)
+    (println)))
+
+(defn -main [& args]
+  (render-hiccup [:vbox
+                  [:hbox
+                   [:text "north-west"]
+                   [:filler]
+                   [:text "north-east"]]
+                  [:filler]
+                  [:hbox
+                   [:filler]
+                   [:text "center"]
+                   [:filler]]
+                  [:filler]
+                  [:hbox
+                   [:text "south-west"]
+                   [:filler]
+                   [:text "south-east"]]]))
