@@ -73,7 +73,7 @@ jobs:
           submodules: true
       - name: Install Homebrew deps
         run: |
-          brew install leiningen clang pkg-config ninja cmake glfw sqlite3
+          brew install leiningen llvm pkg-config ninja cmake glfw sqlite3
       - name: Install jank
         run: |
           brew install jank-lang/jank/jank clojure/tools/clojure
