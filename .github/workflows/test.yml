@@ -99,7 +99,9 @@ jobs:
           key: m2-${{ runner.os }}
       - name: Select Xcode
         run: |
-          sudo xcode-select -switch /Applications/Xcode.app/Contents/Developer
+          sudo xcode-select --reset
+          sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+          export SDKROOT="$(xcrun --sdk macosx --show-sdk-path)"
           echo "SDKROOT=$(xcrun --sdk macosx --show-sdk-path)" >> $GITHUB_ENV
       - name: Test packages
         run: |
