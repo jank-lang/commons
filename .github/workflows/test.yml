@@ -38,8 +38,9 @@ jobs:
             libglfw3-dev
             libsqlite3-dev
             libxinerama-dev
+            libxcursor-dev
           # Increment this when the package list changes.
-          version: 4
+          version: 5
       - name: Install jank
         run: |
           sudo apt install -y curl gnupg lsb-release
@@ -86,6 +87,7 @@ jobs:
       - name: Install Homebrew deps
         run: |
           brew install leiningen pkg-config ninja cmake glfw sqlite3
+          echo "PKG_CONFIG_PATH=$(brew --prefix sqlite3)/lib/pkgconfig:$(brew --prefix glfw)/lib/pkgconfig:$PKG_CONFIG_PATH" >> $GITHUB_ENV
       - name: Install jank
         run: |
           brew install jank-lang/jank/jank
@@ -98,11 +100,11 @@ jobs:
       - name: Select Xcode
         run: |
           sudo xcode-select --reset
-          sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
-          export SDKROOT="$(xcrun --sdk macosx --show-sdk-path)"
+          sudo xcode-select --switch /Applications/Xcode_26.6.app/Contents/Developer
           echo "SDKROOT=$(xcrun --sdk macosx --show-sdk-path)" >> $GITHUB_ENV
       - name: Test packages
         run: |
+          export SDKROOT="$(xcrun --sdk macosx --show-sdk-path)"
           curl -sL -o install-bb https://raw.githubusercontent.com/babashka/babashka/master/install
           chmod +x install-bb
           sudo ./install-bb
