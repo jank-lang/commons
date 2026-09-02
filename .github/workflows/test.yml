@@ -113,6 +113,7 @@ jobs:
           echo "${XCODE_PATH}"
           export DEVELOPER_DIR="${XCODE_PATH}/Contents/Developer"
           export SDKROOT="$(xcrun --sdk macosx --show-sdk-path)"
+          sudo xcodebuild -license accept || true
           curl -sL -o install-bb https://raw.githubusercontent.com/babashka/babashka/master/install
           chmod +x install-bb
           sudo ./install-bb
