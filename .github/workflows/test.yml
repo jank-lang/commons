@@ -39,8 +39,9 @@ jobs:
             libsqlite3-dev
             libxinerama-dev
             libxcursor-dev
+            libxi-dev
           # Increment this when the package list changes.
-          version: 5
+          version: 6
       - name: Install jank
         run: |
           sudo apt install -y curl gnupg lsb-release
@@ -99,11 +100,15 @@ jobs:
           key: m2-${{ runner.os }}
       - name: Select Xcode
         run: |
-          sudo xcode-select --reset
-          sudo xcode-select --switch /Applications/Xcode_26.6.app/Contents/Developer
+          XCODE_PATH=$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)
+          sudo xcode-select --switch "$XCODE_PATH/Contents/Developer"
+          sudo xcodebuild -license accept
+          sudo xcodebuild -runFirstLaunch
+          echo "DEVELOPER_DIR=$XCODE_PATH/Contents/Developer" >> $GITHUB_ENV
           echo "SDKROOT=$(xcrun --sdk macosx --show-sdk-path)" >> $GITHUB_ENV
       - name: Test packages
         run: |
+          export DEVELOPER_DIR="/Applications/Xcode_26.6.app/Contents/Developer"
           export SDKROOT="$(xcrun --sdk macosx --show-sdk-path)"
           curl -sL -o install-bb https://raw.githubusercontent.com/babashka/babashka/master/install
           chmod +x install-bb
