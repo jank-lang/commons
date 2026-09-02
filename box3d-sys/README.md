@@ -7,7 +7,7 @@ Raw package for box3d.
 Add this project to your Leiningen `:dependencies` vector:
 
 ```clojure
-[org.jank-lang.commons/box3d-sys "2026.09-1"]
+[org.jank-lang.commons/box3d-sys "2026.09-2"]
 ```
 
 ## Example
