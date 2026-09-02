@@ -1,11 +1,11 @@
-(defproject org.jank-lang.commons/raygui-sys "2026.09-2"
+(defproject org.jank-lang.commons/raygui-sys "2026.09-3"
   :description "Raw package for raygui."
   :url "https://github.com/jank-lang/commons"
   :license {:name "MPL 2.0"
             :url  "https://www.mozilla.org/en-US/MPL/2.0/"}
   :plugins [[org.jank-lang/lein-jank "2026.09-4"]]
   :middleware [leiningen.jank/middleware]
-  :build-dependencies [[org.jank-lang.commons/jank-build-cmake "testing-SNAPSHOT"]]
+  :build-dependencies [[org.jank-lang.commons/jank-build-cmake "2026.09-1"]]
   ;; raygui at this revision calls raylib's TextToFloat, which raylib gained in
   ;; 5.5. raygui carries its own copy, but only behind RAYGUI_STANDALONE, which
   ;; this package does not define. So raylib-sys has to stay on raylib 5.5 or
