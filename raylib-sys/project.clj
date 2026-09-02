@@ -3,9 +3,9 @@
   :url "https://github.com/jank-lang/commons"
   :license {:name "zlib/libpng"
             :url  "https://github.com/raysan5/raylib/blob/master/LICENSE"}
-  :plugins [[org.jank-lang/lein-jank "2026.07-3"]]
+  :plugins [[org.jank-lang/lein-jank "2026.09-4"]]
   :middleware [leiningen.jank/middleware]
-  :build-dependencies [[org.jank-lang.commons/jank-build-cmake "2026.06-6"]]
+  :build-dependencies [[org.jank-lang.commons/jank-build-cmake "testing-SNAPSHOT"]]
   :verbatim-paths ["lib/raylib/LICENSE"
                    "lib/raylib/README.md"
                    "lib/raylib/raylib.pc.in"

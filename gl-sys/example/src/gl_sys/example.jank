@@ -1,5 +1,7 @@
 (ns gl-sys.example
-  (:include "GL/gl.h"
+  (:include (if (= cpp/jtl.current_platform cpp/jtl.platform.macos_like)
+              "OpenGL/gl.h"
+              "GL/gl.h")
             "GLFW/glfw3.h"))
 
 (defn -main []

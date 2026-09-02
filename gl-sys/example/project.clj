@@ -3,7 +3,7 @@
             :url "https://www.mozilla.org/en-US/MPL/2.0/"}
   :dependencies [[org.jank-lang.commons/gl-sys "2026.09-1"]
                  [org.jank-lang.commons/glfw-sys "2026.09-1"]]
-  :plugins [[org.jank-lang/lein-jank "2026.08-1"]]
+  :plugins [[org.jank-lang/lein-jank "2026.09-4"]]
   :middleware [leiningen.jank/middleware]
   :main gl-sys.example
   :profiles {:base {:jank {:target-dir "target/debug"

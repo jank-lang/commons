@@ -1,0 +1,130 @@
+name: Test packages
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Only allow one build per branch at a time. New builds will cancel existing builds.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ubuntu-test:
+    name: Ubuntu 24.04 - Test
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+        with:
+          submodules: true
+      - uses: awalsh128/cache-apt-pkgs-action@5902b33ae29014e6ca012c5d8025d4346556bd40
+        with:
+          packages: >
+            leiningen
+            bubblewrap
+            build-essential
+            pkg-config
+            ninja-build
+            cmake
+            libopengl-dev
+            libgl1-mesa-dev
+            libglfw3-dev
+            libsqlite3-dev
+            libxinerama-dev
+            libxcursor-dev
+            libxi-dev
+          # Increment this when the package list changes.
+          version: 6
+      - name: Install jank
+        run: |
+          sudo apt install -y curl gnupg lsb-release
+          curl -s "https://ppa.jank-lang.org/KEY.gpg" | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/jank.gpg >/dev/null
+          echo "deb [signed-by=/etc/apt/trusted.gpg.d/jank.gpg] https://ppa.jank-lang.org $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/jank.list >/dev/null
+          sudo apt update
+          sudo apt install -y jank
+          jank check-health
+      - name: Cache ~/.m2
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684
+        with:
+          path: ~/.m2
+          key: m2-${{ runner.os }}
+      - name: Allow unprivileged user namespaces (bubblewrap loopback fix)
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+      - name: Test packages
+        run: |
+          curl -sL -o install-bb https://raw.githubusercontent.com/babashka/babashka/master/install
+          chmod +x install-bb
+          sudo ./install-bb
+          which bb
+
+          for dir in */example;
+          do
+            cd "${dir}"
+            lein compile --verbose || jank_error=1
+            cd -
+          done
+          if [[ "${jank_error}" == 1 ]];
+          then
+            exit 1
+          fi
+
+  macos-test:
+    name: macOS - Test
+    runs-on: macos-26
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+        with:
+          submodules: true
+      - name: Install Homebrew deps
+        run: |
+          brew install leiningen pkg-config ninja cmake glfw sqlite3
+          echo "PKG_CONFIG_PATH=$(brew --prefix sqlite3)/lib/pkgconfig:$(brew --prefix glfw)/lib/pkgconfig:$PKG_CONFIG_PATH" >> $GITHUB_ENV
+      - name: Install jank
+        run: |
+          brew install jank-lang/jank/jank
+          jank check-health
+      - name: Cache ~/.m2
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684
+        with:
+          path: ~/.m2
+          key: m2-${{ runner.os }}
+      - name: Select Xcode
+        run: |
+          XCODE_PATH=$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)
+          echo "${XCODE_PATH}"
+          sudo xcode-select --switch "${XCODE_PATH}/Contents/Developer"
+          sudo xcodebuild -runFirstLaunch || true
+          sudo xcodebuild -license accept || true
+          echo "DEVELOPER_DIR=${XCODE_PATH}/Contents/Developer" >> $GITHUB_ENV
+          echo "SDKROOT=$(xcrun --sdk macosx --show-sdk-path)" >> $GITHUB_ENV
+      - name: Test packages
+        run: |
+          XCODE_PATH=$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)
+          echo "${XCODE_PATH}"
+          export DEVELOPER_DIR="${XCODE_PATH}/Contents/Developer"
+          export SDKROOT="$(xcrun --sdk macosx --show-sdk-path)"
+          curl -sL -o install-bb https://raw.githubusercontent.com/babashka/babashka/master/install
+          chmod +x install-bb
+          sudo ./install-bb
+          which bb
+
+          for dir in */example;
+          do
+            cd "${dir}"
+            lein compile --verbose || jank_error=1
+            cd -
+          done
+          if [[ "${jank_error}" == 1 ]];
+          then
+            exit 1
+          fi
