@@ -19,12 +19,13 @@
             "CMAKE_INSTALL_PREFIX" out-dir}
            (when (and (not static?) rpath)
              {"CMAKE_INSTALL_RPATH" rpath})
-           (when (macos?)
+           (when (and (not static?) rpath (macos?))
              {"CMAKE_SHARED_LIBRARY_RUNTIME_C_FLAG" "-Wl,-rpath,"}))))
 
 (defn build [{:keys [src-dir build-dir] :as input}
              {:keys [defines target] :or {target "install"}}]
   (let [d-flags (map (fn [[k v]] (str "-D" (name k) "=" v))
                      (merge (default-defines input) defines))]
+    (prn :d-flags d-flags)
     (proc/shell (concat ["cmake"] d-flags ["-B" build-dir src-dir]))
     (proc/shell ["cmake" "--build" build-dir "--parallel" "--target" target])))
