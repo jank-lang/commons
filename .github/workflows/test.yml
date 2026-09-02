@@ -78,8 +78,6 @@ jobs:
     runs-on: macos-26
     env:
       HOMEBREW_NO_AUTO_UPDATE: 1
-      CC: /opt/homebrew/opt/llvm/bin/clang
-      CXX: /opt/homebrew/opt/llvm/bin/clang++
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
@@ -87,7 +85,7 @@ jobs:
           submodules: true
       - name: Install Homebrew deps
         run: |
-          brew install leiningen llvm pkg-config ninja cmake glfw sqlite3
+          brew install leiningen pkg-config ninja cmake glfw sqlite3
       - name: Install jank
         run: |
           brew install jank-lang/jank/jank
