@@ -64,22 +64,7 @@ jobs:
       - name: Allow unprivileged user namespaces (bubblewrap loopback fix)
         run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Test packages
-        run: |
-          curl -sL -o install-bb https://raw.githubusercontent.com/babashka/babashka/master/install
-          chmod +x install-bb
-          sudo ./install-bb
-          which bb
-
-          for dir in */example;
-          do
-            cd "${dir}"
-            lein compile --verbose || jank_error=1
-            cd -
-          done
-          if [[ "${jank_error}" == 1 ]];
-          then
-            exit 1
-          fi
+        uses: ./.github/actions/test
 
   macos-test:
     name: macOS - Test
@@ -116,23 +101,4 @@ jobs:
           echo "DEVELOPER_DIR=${XCODE_PATH}/Contents/Developer" >> $GITHUB_ENV
           echo "SDKROOT=$(xcrun --sdk macosx --show-sdk-path)" >> $GITHUB_ENV
       - name: Test packages
-        run: |
-          XCODE_PATH=$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)
-          echo "${XCODE_PATH}"
-          export DEVELOPER_DIR="${XCODE_PATH}/Contents/Developer"
-          export SDKROOT="$(xcrun --sdk macosx --show-sdk-path)"
-          curl -sL -o install-bb https://raw.githubusercontent.com/babashka/babashka/master/install
-          chmod +x install-bb
-          sudo ./install-bb
-          which bb
-
-          for dir in */example;
-          do
-            cd "${dir}"
-            lein compile --verbose || jank_error=1
-            cd -
-          done
-          if [[ "${jank_error}" == 1 ]];
-          then
-            exit 1
-          fi
+        uses: ./.github/actions/test

@@ -1,0 +1,37 @@
+name: Test packages
+description: Install Babashka and compile each package example.
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        curl -sL -o install-bb https://raw.githubusercontent.com/babashka/babashka/master/install
+        chmod +x install-bb
+        sudo ./install-bb
+        which bb
+
+        failed_packages=()
+
+        for dir in */example;
+        do
+          package="${dir%/example}"
+          package_failed=0
+
+          pushd "${dir}"
+          lein compile --verbose || package_failed=1
+          lein with-profile +release compile --verbose || package_failed=1
+          popd
+
+          if [[ "${package_failed}" == 1 ]];
+          then
+            failed_packages+=("${package}")
+          fi
+        done
+
+        if (( ${#failed_packages[@]} > 0 ));
+        then
+          echo "Packages with compilation failures:"
+          printf ' - %s\n' "${failed_packages[@]}"
+          exit 1
+        fi
