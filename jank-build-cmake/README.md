@@ -6,5 +6,5 @@ Build script helper for building CMake packages.
 Add this project to your Leiningen `:build-dependencies` vector:
 
 ```clojure
-[org.jank-lang.commons/jank-build-cmake "2026.09-1"]
+[org.jank-lang.commons/jank-build-cmake "2026.09-2"]
 ```

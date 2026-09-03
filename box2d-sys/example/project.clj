@@ -1,7 +1,7 @@
 (defproject box2d-sys/example "0.1-SNAPSHOT"
   :license {:name "MPL 2.0"
             :url "https://www.mozilla.org/en-US/MPL/2.0/"}
-  :dependencies [[org.jank-lang.commons/box2d-sys "2026.09-2"]]
+  :dependencies [[org.jank-lang.commons/box2d-sys "2026.09-3"]]
   :plugins [[org.jank-lang/lein-jank "2026.09-5"]]
   :middleware [leiningen.jank/middleware]
   :main box2d-sys.example
