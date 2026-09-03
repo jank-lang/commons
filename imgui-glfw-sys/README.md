@@ -7,7 +7,7 @@ Raw package for Dear ImGUI GLFW platform backend.
 Add this project to your Leiningen `:dependencies` vector:
 
 ```clojure
-[org.jank-lang.commons/imgui-glfw-sys "2026.09-3"]
+[org.jank-lang.commons/imgui-glfw-sys "2026.09-4"]
 ```
 
 ## Example
