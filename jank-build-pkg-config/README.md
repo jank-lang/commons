@@ -6,5 +6,5 @@ Build script helper for querying libraries via pkg-config.
 Add this project to your Leiningen `:build-dependencies` vector:
 
 ```clojure
-[org.jank-lang.commons/jank-build-pkg-config "2026.09-1"]
+[org.jank-lang.commons/jank-build-pkg-config "2026.09-2"]
 ```
