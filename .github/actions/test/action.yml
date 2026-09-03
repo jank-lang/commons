@@ -19,8 +19,8 @@ runs:
           package_failed=0
 
           pushd "${dir}"
-          lein compile --verbose || package_failed=1
-          lein with-profile +release compile --verbose || package_failed=1
+          lein compile || package_failed=1
+          lein with-profile +release compile || package_failed=1
           popd
 
           if [[ "${package_failed}" == 1 ]];
