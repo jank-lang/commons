@@ -1,4 +1,4 @@
-(defproject org.jank-lang.commons/raygui-sys "2026.09-4"
+(defproject org.jank-lang.commons/raygui-sys "2026.09-5"
   :description "Raw package for raygui."
   :url "https://github.com/jank-lang/commons"
   :license {:name "MPL 2.0"

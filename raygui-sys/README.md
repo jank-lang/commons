@@ -7,7 +7,7 @@ Raw package for raygui.
 Add this project to your Leiningen `:dependencies` vector:
 
 ```clojure
-[org.jank-lang.commons/raygui-sys "2026.09-4"]
+[org.jank-lang.commons/raygui-sys "2026.09-5"]
 ```
 
 ## Example
