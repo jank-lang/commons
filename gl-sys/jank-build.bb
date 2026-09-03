@@ -8,4 +8,4 @@
     ; we provide this define.
     (println "jank-build::define=GL_SILENCE_DEPRECATION")
     (println "jank-build::link-framework=OpenGL"))
-  (pkg-config "gl"))
+  (pkg-config *input* "gl"))
