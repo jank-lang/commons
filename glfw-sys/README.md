@@ -7,7 +7,7 @@ Raw package for glfw3.
 Add this project to your Leiningen `:dependencies` vector:
 
 ```clojure
-[org.jank-lang.commons/glfw-sys "2026.09-3"]
+[org.jank-lang.commons/glfw-sys "2026.09-4"]
 ```
 
 ## Example
