@@ -7,7 +7,7 @@ Raw package for OpenGL.
 Add this project to your Leiningen `:dependencies` vector:
 
 ```clojure
-[org.jank-lang.commons/gl-sys "2026.09-3"]
+[org.jank-lang.commons/gl-sys "2026.09-4"]
 ```
 
 ## Example
