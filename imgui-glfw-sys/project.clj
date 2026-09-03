@@ -1,4 +1,4 @@
-(defproject org.jank-lang.commons/imgui-glfw-sys "2026.09-6"
+(defproject org.jank-lang.commons/imgui-glfw-sys "2026.09-7"
   :description "Raw package for Dear ImGUI GLFW platform backend."
   :url "https://github.com/jank-lang/commons"
   :license {:name "MIT"
