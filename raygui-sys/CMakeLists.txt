@@ -16,7 +16,7 @@ endif()
 # raylib is included but not linked. The archive keeps raygui's calls into
 # raylib undefined, so they resolve against the libraylib the consumer links
 # through its own raylib-sys dependency, rather than a second copy.
-add_library(raygui raygui_impl.c)
+add_library(raygui STATIC raygui_impl.c)
 target_include_directories(raygui PUBLIC lib/raygui/src
                                          "${RAYLIB_SYS_ROOT}/src"
                                          "${RAYLIB_SYS_ROOT}/include")
