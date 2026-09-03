@@ -18,6 +18,5 @@
              {:keys [defines target] :or {target "install"}}]
   (let [d-flags (map (fn [[k v]] (str "-D" (name k) "=" v))
                      (merge (default-defines input) defines))]
-    (prn :d-flags d-flags)
     (proc/shell (concat ["cmake"] d-flags ["-B" build-dir src-dir]))
     (proc/shell ["cmake" "--build" build-dir "--parallel" "--target" target])))

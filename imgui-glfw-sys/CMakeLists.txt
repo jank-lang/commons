@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.28)
 
-project(imgui-glfw-sys LANGUAGES CXX)
+project(imgui-glfw-sys LANGUAGES C CXX)
 
 set(IMGUI_SYS_ROOT
     ""
