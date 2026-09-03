@@ -50,6 +50,6 @@
     (doseq [include-dir (parse-prefixed "-I" pc-output)]
       (println (str "jank-build::include-dir=" include-dir)))
     (doseq [library (parse-prefixed "-l" pc-output)]
-      (if (has-static-lib? library link-dirs)
+      (if (and (:static? build-input) (has-static-lib? library link-dirs))
         (println (str "jank-build::link-static-library=" library))
         (println (str "jank-build::link-library=" library))))))
