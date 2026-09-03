@@ -17,6 +17,17 @@
                 true)))
           link-dirs)))
 
+(defn brew-pkg-config-path [pkg]
+  (when (and (contains? #{"mac os x" "darwin"} (string/lower-case (System/getProperty "os.name")))
+             (fs/which "brew"))
+    (let [{:keys [exit out]} (proc/shell {:out :string
+                                          :err :string
+                                          :continue true}
+                                         "brew" "--prefix" pkg)
+          prefix (string/trim out)]
+      (when (and (zero? exit) (not (string/blank? prefix)))
+        (str (string/trim prefix) "/lib/pkgconfig")))))
+
 (defn pkg-config
   "Call the `pkg-config` tool and parse link directories, include directories,
   and link libraries."
@@ -24,7 +35,15 @@
   ;; TODO: parse preprocessor defines from cflags
   (let [pc-cmd    (cond-> ["pkg-config" pc-name "--libs" "--cflags"]
                     (:static? build-input) (conj "--static"))
-        pc-output (->> pc-cmd (apply proc/shell {:out :string}) :out)
+        brew-path (brew-pkg-config-path pc-name)
+        pc-opts   (cond-> {:out :string}
+                    brew-path (assoc :extra-env
+                                     {"PKG_CONFIG_PATH"
+                                      (if-let [current-path (not-empty
+                                                             (System/getenv "PKG_CONFIG_PATH"))]
+                                        (str brew-path ":" current-path)
+                                        brew-path)}))
+        pc-output (->> pc-cmd (apply proc/shell pc-opts) :out)
         link-dirs (parse-prefixed "-L" pc-output)]
     (doseq [link-dir link-dirs]
       (println (str "jank-build::link-dir=" link-dir)))
