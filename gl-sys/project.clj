@@ -3,6 +3,6 @@
   :url "https://github.com/jank-lang/commons"
   :license {:name "MIT"
             :url "https://docs.mesa3d.org/license.html"}
-  :plugins [[org.jank-lang/lein-jank "2026.09-4"]]
+  :plugins [[org.jank-lang/lein-jank "2026.09-5"]]
   :middleware [leiningen.jank/middleware]
   :build-dependencies [[org.jank-lang.commons/jank-build-pkg-config "2026.09-1"]])
