@@ -6,6 +6,6 @@
   :build-dependencies [[org.jank-lang.commons/jank-build-cmake "2026.09-2"]]
   :dependencies [[org.jank-lang.commons/glfw-sys "2026.09-4"]
                  [org.jank-lang.commons/imgui-sys "2026.08-2"]]
-  :plugins [[org.jank-lang/lein-jank "2026.09-5"]]
+  :plugins [[org.jank-lang/lein-jank "2026.09-6"]]
   :middleware [leiningen.jank/middleware]
   :verbatim-paths ["CMakeLists.txt"])
