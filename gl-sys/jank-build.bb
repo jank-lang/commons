@@ -3,7 +3,9 @@
 
 ; macOS doesn't package OpenGL with pkg-config. It's just globally available.
 (if (contains? #{"mac os x" "darwin"} (lower-case (System/getProperty "os.name")))
-  ; However, if macOS has deprecated OpenGL and surfaces warnings about this unless
-  ; we provide this define.
-  (println "jank-build::define=GL_SILENCE_DEPRECATION")
-  (pkg-config "gl"))
+  (do
+    ; However, if macOS has deprecated OpenGL and surfaces warnings about this unless
+    ; we provide this define.
+    (println "jank-build::define=GL_SILENCE_DEPRECATION")
+    (println "jank-build::link-framework=OpenGL"))
+  (pkg-config *input* "gl"))

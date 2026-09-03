@@ -2,14 +2,8 @@
   (:require [babashka.process :as proc]
             [clojure.string :refer [lower-case]]))
 
-(defn macos? []
-  (case (lower-case (System/getProperty "os.name"))
-    ("mac os x" "darwin") true
-    false))
-
 (defn install-rpath []
-  (if (macos?)
-    "@loader_path"
+  (when (= "linux" (lower-case (System/getProperty "os.name")))
     "$ORIGIN"))
 
 (defn default-defines [{:keys [out-dir optimization-level static?]}]
@@ -18,9 +12,7 @@
             "CMAKE_BUILD_TYPE"     (if (pos? optimization-level) "Release" "Debug")
             "CMAKE_INSTALL_PREFIX" out-dir}
            (when (and (not static?) rpath)
-             {"CMAKE_INSTALL_RPATH" rpath})
-           (when (and (not static?) rpath (macos?))
-             {"CMAKE_SHARED_LIBRARY_RUNTIME_C_FLAG" "-Wl,-rpath,"}))))
+             {"CMAKE_INSTALL_RPATH" rpath}))))
 
 (defn build [{:keys [src-dir build-dir] :as input}
              {:keys [defines target] :or {target "install"}}]

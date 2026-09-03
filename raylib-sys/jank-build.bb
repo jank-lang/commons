@@ -3,11 +3,12 @@
 
 (let [src-dir (fs/path (:src-dir *input*) "lib" "raylib")
       out-dir (:out-dir *input*)
-      input   (assoc *input* :src-dir src-dir)]
-  (cmake/build input {:defines {"BUILD_EXAMPLES" false
-                                ; raylib has transient deps which aren't handled by
-                                ; static linking.
-                                "BUILD_SHARED_LIBS" true}})
+      input   (assoc *input*
+                     :src-dir src-dir
+                     ; raylib has transient deps which aren't handled by
+                     ; static linking.
+                     :static? false)]
+  (cmake/build input {:defines {"BUILD_EXAMPLES" false}})
 
   (println (str "jank-build::include-dir=" (fs/path out-dir "include")))
   ; macOS uses lib.

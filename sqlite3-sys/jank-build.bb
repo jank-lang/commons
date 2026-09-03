@@ -1,3 +1,3 @@
 (require '[jank.build.pkg-config :refer [pkg-config]])
 
-(pkg-config "sqlite3")
+(pkg-config *input* "sqlite3")

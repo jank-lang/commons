@@ -1,3 +1,3 @@
 (require '[jank.build.pkg-config :refer [pkg-config]])
 
-(pkg-config "glfw3")
+(pkg-config *input* "glfw3")
