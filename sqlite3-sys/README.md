@@ -7,7 +7,7 @@ Raw package for sqlite3.
 Add this project to your Leiningen `:dependencies` vector:
 
 ```clojure
-[org.jank-lang.commons/sqlite3-sys "2026.09-2"]
+[org.jank-lang.commons/sqlite3-sys "2026.09-3"]
 ```
 
 ## Example
