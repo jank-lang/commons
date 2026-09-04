@@ -22,7 +22,10 @@
              (fs/which "brew"))
     (let [{:keys [exit out]} (proc/shell {:out :string
                                           :err :string
-                                          :continue true}
+                                          :continue true
+                                          ; Disable brew's cache, since the sandbox won't permit
+                                          ; the write access.
+                                          :extra-env {"HOMEBREW_NO_BOOTSNAP" "1"}}
                                          "brew" "--prefix" pkg)
           prefix (string/trim out)]
       (when (and (zero? exit) (not (string/blank? prefix)))
