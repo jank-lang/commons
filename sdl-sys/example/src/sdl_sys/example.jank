@@ -1,0 +1,45 @@
+(ns sdl-sys.example
+  (:include "SDL3/SDL.h" "SDL3/SDL_main.h"))
+
+(def window-width 640)
+(def window-height 480)
+
+(cpp/raw "
+namespace sdl_sys::example {
+int jank_sdl_run(int argc, char *argv[]) {
+  using namespace jank::runtime;
+  auto main_var(__rt_ctx->find_var(\"sdl-sys.example\", \"run-app\"));
+  return main_var.call().to_integer();
+}
+}")
+
+(defn run-app []
+  (cpp/SDL_SetAppMetadata "Example of sdl-sys" "1.0" "sdl-sys.example")
+
+  (when (cpp/! (cpp/SDL_Init cpp/SDL_INIT_VIDEO))
+    (println "Couldn't initialize SDL:" (cpp/SDL_GetError))
+    (cpp/exit 1))
+
+  (let [window   (cpp/SDL_CreateWindow "sdl-sys.example" window-width window-height cpp/SDL_WINDOW_RESIZABLE)
+        renderer (cpp/SDL_CreateRenderer window cpp/nullptr)]
+    (cpp/SDL_SetRenderVSync renderer 1)
+
+    (while true
+      (let [event (cpp/SDL_Event)]
+        (while (cpp/SDL_PollEvent (cpp/& event))
+          (when (= (.-type event) cpp/SDL_EVENT_QUIT)
+            (cpp/exit 0))))
+
+      (let [now (/ (cpp/SDL_GetTicks) 1000.0)
+            r   (+ 0.5 (* 0.5 (cpp/sin now)))
+            g   (+ 0.5 (* 0.5 (cpp/sin (+ now (* cpp/std.numbers.pi 2/3)))))
+            b   (+ 0.5 (* 0.5 (cpp/sin (+ now (* cpp/std.numbers.pi 4/3)))))]
+        (cpp/SDL_SetRenderDrawColorFloat renderer r g b cpp/SDL_ALPHA_OPAQUE_FLOAT))
+
+      (cpp/SDL_RenderClear renderer)
+      (cpp/SDL_RenderPresent renderer))))
+
+(defn -main [& args]
+  (let [argc 0
+        argv (cpp/cast (:* (:* char)) cpp/nullptr)]
+    (cpp/SDL_RunApp argc argv cpp/sdl_sys.example.jank_sdl_run cpp/nullptr)))
