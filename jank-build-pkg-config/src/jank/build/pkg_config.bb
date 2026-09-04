@@ -17,19 +17,21 @@
                 true)))
           link-dirs)))
 
-(defn brew-pkg-config-path [pkg]
+(defn brew-pkg-config-path [build-input pkg]
   (when (and (contains? #{"mac os x" "darwin"} (string/lower-case (System/getProperty "os.name")))
              (fs/which "brew"))
     (let [{:keys [exit out]} (proc/shell {:out :string
                                           :err :string
                                           :continue true
-                                          ; Disable brew's cache, since the sandbox won't permit
-                                          ; the write access.
-                                          :extra-env {"HOMEBREW_NO_BOOTSNAP" "1"}}
-                                         "brew" "--prefix" pkg)
+                                          ; Disable brew's cache and use the already-authorized
+                                          ; working directory rather than /private/tmp.
+                                          :extra-env {"HOMEBREW_NO_BOOTSNAP" "1"
+                                                      "HOMEBREW_NO_AUTO_UPDATE" "1"
+                                                      "HOMEBREW_TEMP" (:out-dir build-input)}}
+                                         "brew" "--prefix")
           prefix (string/trim out)]
       (when (and (zero? exit) (not (string/blank? prefix)))
-        (str (string/trim prefix) "/lib/pkgconfig")))))
+        (str prefix "/opt/" pkg "/lib/pkgconfig")))))
 
 (defn pkg-config
   "Call the `pkg-config` tool and parse link directories, include directories,
@@ -38,7 +40,7 @@
   ;; TODO: parse preprocessor defines from cflags
   (let [pc-cmd    (cond-> ["pkg-config" pc-name "--libs" "--cflags"]
                     (:static? build-input) (conj "--static"))
-        brew-path (brew-pkg-config-path pc-name)
+        brew-path (brew-pkg-config-path build-input pc-name)
         pc-opts   (cond-> {:out :string}
                     brew-path (assoc :extra-env
                                      {"PKG_CONFIG_PATH"
