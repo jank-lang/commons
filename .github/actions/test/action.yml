@@ -1,5 +1,5 @@
 name: Test packages
-description: Install Babashka and compile each package example.
+description: Install Babashka, install packages, and compile each package example.
 
 runs:
   using: composite
@@ -12,6 +12,23 @@ runs:
         which bb
 
         failed_packages=()
+
+        for project in */project.clj;
+        do
+          package="${project%/project.clj}"
+
+          pushd "${package}"
+          lein install || failed_packages+=("${package}")
+          popd
+        done
+
+        if (( ${#failed_packages[@]} > 0 ));
+        then
+          echo "Packages with installation failures:"
+          printf ' - %s\n' "${failed_packages[@]}"
+          exit 1
+        fi
+
 
         for dir in */example;
         do
