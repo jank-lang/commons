@@ -4,6 +4,7 @@ project(imgui-sys LANGUAGES CXX)
 
 add_library(
   imgui
+  STATIC
   lib/imgui/imgui.cpp lib/imgui/imgui_demo.cpp lib/imgui/imgui_draw.cpp
   lib/imgui/imgui_tables.cpp lib/imgui/imgui_widgets.cpp
   lib/imgui/misc/cpp/imgui_stdlib.cpp)

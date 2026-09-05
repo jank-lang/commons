@@ -4,7 +4,7 @@
   :dependencies [[org.jank-lang.commons/imgui-glfw-sys "2026.09-9"]
                  [org.jank-lang.commons/imgui-opengl2-sys "2026.09-6"]
                  [org.jank-lang.commons/gl-sys "2026.09-4"]]
-  :plugins [[org.jank-lang/lein-jank "2026.09-6"]]
+  :plugins [[org.jank-lang/lein-jank "2026.09-7"]]
   :middleware [leiningen.jank/middleware]
   :main imgui-opengl2-sys.example
   :profiles {:base {:jank {:target-dir "target/debug"
