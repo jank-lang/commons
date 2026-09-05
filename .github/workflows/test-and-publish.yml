@@ -1,14 +1,10 @@
-name: Test packages
+name: Test and publish packages
 
 on:
   pull_request:
-  workflow_run:
-    workflows:
-      - Publish
+  push:
     branches:
       - main
-    types:
-      - completed
   workflow_dispatch:
 
 permissions:
@@ -22,13 +18,11 @@ concurrency:
 jobs:
   ubuntu-test:
     name: Ubuntu 24.04 - Test
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
         with:
-          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
           submodules: true
       - uses: awalsh128/cache-apt-pkgs-action@5902b33ae29014e6ca012c5d8025d4346556bd40
         with:
@@ -68,7 +62,6 @@ jobs:
 
   macos-test:
     name: macOS - Test
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: macos-26
     env:
       HOMEBREW_NO_AUTO_UPDATE: 1
@@ -76,7 +69,6 @@ jobs:
     steps:
       - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
         with:
-          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
           submodules: true
       - name: Install Homebrew deps
         run: |
@@ -102,3 +94,44 @@ jobs:
           echo "SDKROOT=$(xcrun --sdk macosx --show-sdk-path)" >> $GITHUB_ENV
       - name: Test packages
         uses: ./.github/actions/test
+
+  publish:
+    name: Publish tagged packages
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs:
+      - ubuntu-test
+      - macos-test
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+          fetch-tags: false
+      - uses: awalsh128/cache-apt-pkgs-action@5902b33ae29014e6ca012c5d8025d4346556bd40
+        with:
+          packages: git gpg leiningen
+          # Increment this when the package list changes.
+          version: 1
+      - name: Cache ~/.m2
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/project.clj') }}
+          restore-keys: |
+            ${{ runner.os }}-m2-
+      - name: Configure GPG Key
+        run: |
+          echo -n "${JANK_GPG_SIGNING_KEY}" | gpg --import
+        env:
+          JANK_GPG_SIGNING_KEY: ${{ secrets.JANK_GPG_SIGNING_KEY }}
+      - name: Configure Leiningen
+        run: |
+          mkdir -p ~/.lein
+          echo '{:user {:repositories [["releases" {:url "https://clojars.org/repo" :username :env/lein_username :password :env/lein_password}]]}}' > ~/.lein/profiles.clj
+      - name: Find and publish
+        run: ${{ github.workspace }}/bin/ci/publish ${{ github.event.before }} ${{ github.sha }}
+        env:
+          LEIN_USERNAME: ${{ secrets.LEIN_USERNAME }}
+          LEIN_PASSWORD: ${{ secrets.LEIN_PASSWORD }}
