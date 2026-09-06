@@ -3,7 +3,7 @@
   :url "https://github.com/jank-lang/commons"
   :license {:name "zlib"
             :url "https://github.com/libsdl-org/SDL/blob/main/LICENSE.txt"}
-  :plugins [[org.jank-lang/lein-jank "2026.09-6"]]
+  :plugins [[org.jank-lang/lein-jank "2026.09-7"]]
   :middleware [leiningen.jank/middleware]
   :build-dependencies [[org.jank-lang.commons/jank-build-cmake "2026.09-2"]]
   :verbatim-paths ["lib/SDL/LICENSE.txt"

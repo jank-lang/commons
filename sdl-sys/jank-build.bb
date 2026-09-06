@@ -1,7 +1,7 @@
 (require '[babashka.fs :as fs]
          '[jank.build.cmake :as cmake])
 
-(let [src-dir (fs/path (:src-dir *input*) "lib" "SDL")
+(let [src-dir (str (fs/path (:src-dir *input*) "lib" "SDL"))
       out-dir (:out-dir *input*)
       input   (assoc *input* :src-dir src-dir)]
   (cmake/build input {:defines {"CMAKE_INSTALL_LIBDIR" "lib"
