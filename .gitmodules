@@ -16,3 +16,6 @@
 [submodule "raygui-sys/lib/raygui"]
 	path = raygui-sys/lib/raygui
 	url = https://github.com/raysan5/raygui
+[submodule "sdl-sys/lib/SDL"]
+	path = sdl-sys/lib/SDL
+	url = https://github.com/libsdl-org/SDL.git
