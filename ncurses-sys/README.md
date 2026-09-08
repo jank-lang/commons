@@ -7,7 +7,7 @@ Raw package for ncurses.
 Add this project to your Leiningen `:dependencies` vector:
 
 ```clojure
-[org.jank-lang.commons/ncurses-sys "0.1-SNAPSHOT"]
+[org.jank-lang.commons/ncurses-sys "2026.09-1"]
 ```
 
 ## Example
