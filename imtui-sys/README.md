@@ -1,7 +1,7 @@
 # imtui-sys
 [![Clojars Project](https://img.shields.io/clojars/v/org.jank-lang.commons/imtui-sys.svg)](https://releases.clojars.org/org.jank-lang.commons/imtui-sys)
 
-Raw package for Dear imtui.
+Raw package for Dear ImTUI.
 
 ## Usage
 Add this project to your Leiningen `:dependencies` vector:
