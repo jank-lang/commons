@@ -4,7 +4,7 @@
   :license {:name "MIT"
             :url "https://github.com/ggerganov/imtui/blob/master/LICENSE"}
   :build-dependencies [[org.jank-lang.commons/jank-build-cmake "2026.09-2"]]
-  :dependencies [[org.jank-lang.commons/ncurses-sys "0.1-SNAPSHOT"]]
+  :dependencies [[org.jank-lang.commons/ncurses-sys "2026.09-1"]]
   :plugins [[org.jank-lang/lein-jank "2026.09-7"]]
   :middleware [leiningen.jank/middleware]
   :verbatim-paths ["lib/imtui/LICENSE"
