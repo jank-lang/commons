@@ -19,3 +19,6 @@
 [submodule "sdl-sys/lib/SDL"]
 	path = sdl-sys/lib/SDL
 	url = https://github.com/libsdl-org/SDL.git
+[submodule "imtui-sys/lib/imtui"]
+	path = imtui-sys/lib/imtui
+	url = https://github.com/ggerganov/imtui.git

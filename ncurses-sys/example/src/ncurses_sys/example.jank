@@ -1,0 +1,24 @@
+(ns ncurses-sys.example
+  (:include "ncurses.h"))
+
+(cpp/raw "inline void ncurses_raw()
+          { raw(); }")
+
+(defn print-h-centered [s]
+  (let [len (count s)]
+    (cpp/mvprintw (cpp// cpp/LINES 2) (- (cpp// cpp/COLS 2) (/ len 2)) s)))
+
+(defn -main []
+  (cpp/initscr)
+  (cpp/ncurses_raw)
+
+  (cpp/keypad cpp/stdscr true)
+  (cpp/noecho)
+
+  (cpp/curs_set 0)
+  (print-h-centered "Hello jank and ncurses!")
+  (cpp/mvprintw (cpp/- cpp/LINES 1) 0 "Press any key to exit.")
+  (cpp/refresh)
+
+  (cpp/getch)
+  (cpp/endwin))
