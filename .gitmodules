@@ -22,3 +22,6 @@
 [submodule "imtui-sys/lib/imtui"]
 	path = imtui-sys/lib/imtui
 	url = https://github.com/ggerganov/imtui.git
+[submodule "glm-sys/lib/glm"]
+	path = glm-sys/lib/glm
+	url = https://github.com/g-truc/glm

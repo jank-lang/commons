@@ -1,0 +1,17 @@
+(ns glm-sys.example
+  (:include "iostream"
+            "glm/glm.hpp"
+            "glm/gtc/constants.hpp"
+            "glm/gtx/string_cast.hpp")
+  (:refer-global :only [glm.dmat4 glm.dvec3]))
+
+(defn -main [& args]
+  (let [pi #cpp (glm.pi double)
+        projection (cpp/glm.perspective (* (pi) 0.25) (/ 4.0 3.0) 0.1 100.0)
+        view (cpp/glm.translate (glm.dmat4 1.0) (glm.dvec3 0.0))
+        model (cpp/glm.scale (glm.dmat4 1.0) (glm.dvec3 0.5))
+        camera (cpp/* (cpp/* projection view) model)]
+    (-> cpp/std.cout
+        (cpp/<< (cpp/glm.to_string camera))
+        (cpp/<< "\n"))
+    nil))
