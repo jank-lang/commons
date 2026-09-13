@@ -5,6 +5,7 @@
       out-dir (:out-dir *input*)
       input   (assoc *input* :src-dir src-dir)]
   (cmake/build input {:defines {"CMAKE_INSTALL_LIBDIR" "lib"
+                                "CMAKE_OSX_DEPLOYMENT_TARGET" "10.13"
                                 "HTTPLIB_COMPILE"      true
                                 ;; TODO: static build causes "Unsupported x86-64 relocation type R_X86_64_TLSLD"
                                 "HTTPLIB_SHARED"       true}})
