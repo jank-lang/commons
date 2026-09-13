@@ -1,0 +1,18 @@
+(ns cpp-httplib-sys.example
+  (:require [clojure.data.json :as json])
+  (:include "httplib.h"))
+
+(defn http-get [host path]
+  (let [resp (.Get (cpp/httplib.Client host) path)]
+    (if (cpp/bool resp)
+      {:status (.-status (cpp/* resp))
+       :body   (.-body (cpp/* resp))}
+      {:error (cpp/httplib.to_string (.error resp))})))
+
+(defn -main [& args]
+  ;; Get the latest activity on the jank repo.
+  (let [resp (http-get "https://api.github.com"
+                       "/repos/jank-lang/jank/activity?per_page=1")]
+    (if-let [{:keys [status body]} resp]
+      (println (json/write-str (json/read-str body) {:indent true}))
+      (println "Request failed:" (:error resp)))))

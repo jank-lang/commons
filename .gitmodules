@@ -25,3 +25,6 @@
 [submodule "glm-sys/lib/glm"]
 	path = glm-sys/lib/glm
 	url = https://github.com/g-truc/glm
+[submodule "cpp-httplib-sys/lib/cpp-httplib"]
+	path = cpp-httplib-sys/lib/cpp-httplib
+	url = https://github.com/yhirose/cpp-httplib
