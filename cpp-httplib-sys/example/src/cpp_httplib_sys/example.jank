@@ -13,6 +13,6 @@
   ;; Get the latest activity on the jank repo.
   (let [resp (http-get "https://api.github.com"
                        "/repos/jank-lang/jank/activity?per_page=1")]
-    (if-let [{:keys [status body]} resp]
-      (println (json/write-str (json/read-str body) {:indent true}))
-      (println "Request failed:" (:error resp)))))
+    (if (:error resp)
+      (println "Request failed:" (:error resp))
+      (println (json/write-str (json/read-str (:body resp)) {:indent true})))))
