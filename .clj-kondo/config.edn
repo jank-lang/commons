@@ -1,0 +1,2 @@
+{:linters {:duplicate-require {:level off}
+           :unresolved-symbol {:exclude [*input*]}}}

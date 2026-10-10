@@ -11,6 +11,11 @@ runs:
         sudo ./install-bb
         which bb
 
+        curl -sLO https://raw.githubusercontent.com/clj-kondo/clj-kondo/master/script/install-clj-kondo
+        chmod +x install-clj-kondo
+        ./install-clj-kondo
+        which clj-kondo
+
         failed_packages=()
 
         for project in */project.clj;
@@ -18,6 +23,9 @@ runs:
           package="${project%/project.clj}"
 
           pushd "${package}"
+          if [[ -f "jank-build.bb" ]]; then
+            clj-kondo --lint jank-build.bb || failed_packages+=("${package}")
+          fi
           lein install || failed_packages+=("${package}")
           popd
         done
