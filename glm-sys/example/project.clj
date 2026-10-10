@@ -2,7 +2,7 @@
   :license {:name "MPL 2.0"
             :url "https://www.mozilla.org/en-US/MPL/2.0/"}
   :dependencies [[org.jank-lang.commons/glm-sys "2026.09-1"]]
-  :plugins [[org.jank-lang/lein-jank "2026.09-7"]]
+  :plugins [[org.jank-lang/lein-jank "2026.09-9"]]
   :middleware [leiningen.jank/middleware]
   :main glm-sys.example
   :profiles {:base {:jank {:target-dir "target/debug"
