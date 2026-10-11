@@ -1,4 +1,4 @@
-(defproject org.jank-lang.commons/jank-build "0.1-SNAPSHOT"
+(defproject org.jank-lang.commons/jank-build "2026.10-1"
   :description "Build script helper functions"
   :url "https://github.com/jank-lang/commons"
   :license {:name "MPL 2.0"

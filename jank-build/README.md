@@ -6,5 +6,5 @@ Build script helper functions.
 Add this project to your Leiningen `:build-dependencies` vector:
 
 ```clojure
-[org.jank-lang.commons/jank-build "0.1-SNAPSHOT"]
+[org.jank-lang.commons/jank-build "2026.10-1"]
 ```
