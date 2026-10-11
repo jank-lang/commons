@@ -3,6 +3,6 @@
   :url "https://github.com/jank-lang/commons"
   :license {:name "Public Domain"
             :url "https://www.sqlite.org/copyright.html"}
-  :plugins [[org.jank-lang/lein-jank "2026.09-9"]]
+  :plugins [[org.jank-lang/lein-jank "2026.10-1"]]
   :middleware [leiningen.jank/middleware]
-  :build-dependencies [[org.jank-lang.commons/jank-build "0.1-SNAPSHOT"]])
+  :build-dependencies [[org.jank-lang.commons/jank-build "2026.10-1"]])

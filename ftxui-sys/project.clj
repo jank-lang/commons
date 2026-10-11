@@ -3,7 +3,7 @@
   :url "https://github.com/jank-lang/commons"
   :license {:name "MIT"
             :url  "https://github.com/ArthurSonzogni/FTXUI/blob/main/LICENSE"}
-  :build-dependencies [[org.jank-lang.commons/jank-build "0.1-SNAPSHOT"]]
-  :plugins [[org.jank-lang/lein-jank "2026.09-9"]]
+  :build-dependencies [[org.jank-lang.commons/jank-build "2026.10-1"]]
+  :plugins [[org.jank-lang/lein-jank "2026.10-1"]]
   :middleware [leiningen.jank/middleware]
   :verbatim-paths ["lib/ftxui"])
