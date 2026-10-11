@@ -25,3 +25,9 @@
 [submodule "cpp-httplib-sys/lib/cpp-httplib"]
 	path = cpp-httplib-sys/lib/cpp-httplib
 	url = https://github.com/yhirose/cpp-httplib
+[submodule "implot-sys/lib/implot"]
+	path = implot-sys/lib/implot
+	url = https://github.com/epezent/implot
+[submodule "implot3d-sys/lib/implot3d"]
+	path = implot3d-sys/lib/implot3d
+	url = https://github.com/brenocq/implot3d

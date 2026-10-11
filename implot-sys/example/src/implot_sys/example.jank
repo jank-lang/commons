@@ -1,0 +1,63 @@
+(ns implot-sys.example
+  (:include "numbers"
+            "GLFW/glfw3.h"
+            "imgui.h"
+            "imgui_impl_glfw.h"
+            "imgui_impl_opengl2.h"
+            "implot.h"))
+
+;; TODO: jank can't deduce the template scalar type on ImPlot::PlotLine yet, so
+;; specify it explicitly here.
+(cpp/raw "
+void PlotLineD(const char* label_id, jank::runtime::obj::persistent_vector_ref xs, jank::runtime::obj::persistent_vector_ref ys)
+{
+  auto v_xs = jank::runtime::convert<std::vector<double>>::from_object(xs);
+  auto v_ys = jank::runtime::convert<std::vector<double>>::from_object(ys);
+
+  ImPlot::PlotLine(label_id, v_xs.data(), v_ys.data(), v_xs.size());
+}")
+
+(defn f [t]
+  ;; Exponential sine wave
+  (let [A 1.0
+        r -0.5
+        ω 5.0
+        ϕ 0.0]
+    (* A (* (cpp/exp (* r t))
+            (cpp/sin (+ (* ω t) ϕ))))))
+
+(defn -main []
+  (cpp/glfwInit)
+
+  (let [window* (cpp/glfwCreateWindow 400 300
+                                      "jank"
+                                      cpp/nullptr cpp/nullptr)]
+    (cpp/glfwMakeContextCurrent window*)
+    (cpp/ImGui.CreateContext)
+    (cpp/ImGui_ImplGlfw_InitForOpenGL window* true)
+    (cpp/ImGui_ImplOpenGL2_Init)
+    (cpp/ImPlot.CreateContext)
+
+    (while (cpp/! (cpp/glfwWindowShouldClose window*))
+      (cpp/glfwPollEvents)
+      (cpp/ImGui_ImplOpenGL2_NewFrame)
+      (cpp/ImGui_ImplGlfw_NewFrame)
+      (cpp/ImGui.NewFrame)
+
+      (when (cpp/ImGui.Begin "jank")
+        (let [xs (vec (range 0.0 (* 2 cpp/std.numbers.pi) 0.01))
+              ys (mapv f xs)
+              ;; TODO: https://github.com/jank-lang/jank/issues/1071
+              ;; xs (cpp/cast (std.vector double) [1.0 2.0 3.0])
+              ;; ys (cpp/cast (std.vector double) [0.0 1.0 0.0])
+              ]
+          (when (cpp/ImPlot.BeginPlot "my plot")
+            (cpp/PlotLineD "my line" xs ys)
+            (cpp/ImPlot.EndPlot))))
+      (cpp/ImGui.End)
+
+      (cpp/ImGui.Render)
+      (cpp/ImGui_ImplOpenGL2_RenderDrawData (cpp/ImGui.GetDrawData))
+      (cpp/glfwSwapBuffers window*))
+
+    (cpp/glfwTerminate)))
