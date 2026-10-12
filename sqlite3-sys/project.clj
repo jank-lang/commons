@@ -1,4 +1,4 @@
-(defproject org.jank-lang.commons/sqlite3-sys "2026.09-4"
+(defproject org.jank-lang.commons/sqlite3-sys "2026.10-1"
   :description "Raw package for sqlite3."
   :url "https://github.com/jank-lang/commons"
   :license {:name "Public Domain"
