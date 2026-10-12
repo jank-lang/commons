@@ -7,7 +7,7 @@ Raw package for FTXUI.
 Add this project to your Leiningen `:dependencies` vector:
 
 ```clojure
-[org.jank-lang.commons/ftxui-sys "2026.09-3"]
+[org.jank-lang.commons/ftxui-sys "2026.10-1"]
 ```
 
 ## Example
