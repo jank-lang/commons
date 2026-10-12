@@ -1,4 +1,4 @@
-(defproject org.jank-lang.commons/imgui-sys "2026.09-3"
+(defproject org.jank-lang.commons/imgui-sys "2026.10-1"
   :description "Raw package for Dear ImGUI."
   :url "https://github.com/jank-lang/commons"
   :license {:name "MIT"

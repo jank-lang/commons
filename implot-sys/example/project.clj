@@ -1,10 +1,10 @@
 (defproject implot-sys/example "0.1-SNAPSHOT"
   :license {:name "MPL 2.0"
             :url "https://www.mozilla.org/en-US/MPL/2.0/"}
-  :dependencies [[org.jank-lang.commons/imgui-sys "2026.09-3"]
-                 [org.jank-lang.commons/imgui-glfw-sys "2026.09-9"]
-                 [org.jank-lang.commons/imgui-opengl2-sys "2026.09-6"]
-                 [org.jank-lang.commons/implot-sys "0.1-SNAPSHOT"]]
+  :dependencies [[org.jank-lang.commons/imgui-sys "2026.10-1"]
+                 [org.jank-lang.commons/imgui-glfw-sys "2026.10-1"]
+                 [org.jank-lang.commons/imgui-opengl2-sys "2026.10-1"]
+                 [org.jank-lang.commons/implot-sys "2026.10-1"]]
   :plugins [[org.jank-lang/lein-jank "2026.10-1"]]
   :middleware [leiningen.jank/middleware]
   :main implot-sys.example
