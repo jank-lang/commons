@@ -7,7 +7,7 @@ Raw package for implot, a Dear ImGui extension.
 Add this project to your Leiningen `:dependencies` vector:
 
 ```clojure
-[org.jank-lang.commons/implot-sys "0.1-SNAPSHOT"]
+[org.jank-lang.commons/implot-sys "2026.10-1"]
 ```
 
 ## Example
