@@ -1,4 +1,4 @@
-(defproject org.jank-lang.commons/ncurses-sys "2026.09-1"
+(defproject org.jank-lang.commons/ncurses-sys "2026.10-1"
   :description "Raw package for ncurses."
   :url "https://github.com/jank-lang/commons"
   :license {:name "X11"
