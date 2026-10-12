@@ -7,7 +7,7 @@ Raw package for SDL.
 Add this project to your Leiningen `:dependencies` vector:
 
 ```clojure
-[org.jank-lang.commons/sdl-sys "2026.09-1"]
+[org.jank-lang.commons/sdl-sys "2026.10-1"]
 ```
 
 ## Example
