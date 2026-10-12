@@ -1,18 +1,15 @@
 (require '[babashka.fs :as fs]
-         '[jank.build.cmake :as cmake])
+         '[jank.build.cmake :refer [cmake]]
+         '[jank.build.util :as util])
 
 (let [src-dir (fs/path (:src-dir *input*) "lib" "raylib")
-      out-dir (:out-dir *input*)
       input   (assoc *input*
                      :src-dir src-dir
                      ; raylib has transient deps which aren't handled by
                      ; static linking.
                      :static? false)]
-  (cmake/build input {:defines {"BUILD_EXAMPLES" false}})
+  (cmake input {:defines {"BUILD_EXAMPLES" false}})
 
-  (println (str "jank-build::include-dir=" (fs/path out-dir "include")))
-  ; macOS uses lib.
-  (println (str "jank-build::link-dir=" (fs/path out-dir "lib")))
-  ; Linux uses lib64.
-  (println (str "jank-build::link-dir=" (fs/path out-dir "lib64")))
-  (println (str "jank-build::link-library=" "raylib")))
+  (util/include-dir "include")
+  (util/link-dir "lib")
+  (util/link-library "raylib"))

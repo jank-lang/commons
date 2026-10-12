@@ -3,6 +3,6 @@
   :url "https://github.com/jank-lang/commons"
   :license {:name "TODO"
             :url "TODO"}
-  :plugins [[org.jank-lang/lein-jank "2026.09-7"]]
+  :plugins [[org.jank-lang/lein-jank "2026.10-1"]]
   :middleware [leiningen.jank/middleware]
   :build-dependencies [])

@@ -1,12 +1,11 @@
 (require '[babashka.fs :as fs]
-         '[jank.build.cmake :as cmake])
+         '[jank.build.cmake :refer [cmake]]
+         '[jank.build.util :as util])
 
-(let [out-dir (:out-dir *input*)]
-  (cmake/build (update *input* :src-dir #(fs/path % "lib/ftxui"))
-               {:defines {"CMAKE_INSTALL_LIBDIR" "lib"}})
+(cmake (update *input* :src-dir #(fs/path % "lib/ftxui")))
 
-  (println (str "jank-build::include-dir=" (fs/path out-dir "include")))
-  (println (str "jank-build::link-dir=" (fs/path out-dir "lib")))
-  (println (str "jank-build::link-library=" "ftxui-component"))
-  (println (str "jank-build::link-library=" "ftxui-dom"))
-  (println (str "jank-build::link-library=" "ftxui-screen")))
+(util/include-dir "include")
+(util/link-dir "lib")
+(util/link-library "ftxui-component")
+(util/link-library "ftxui-dom")
+(util/link-library "ftxui-screen")
