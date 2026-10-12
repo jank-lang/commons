@@ -1,4 +1,4 @@
-(defproject org.jank-lang.commons/cpp-httplib-sys "2026.09-1"
+(defproject org.jank-lang.commons/cpp-httplib-sys "2026.10-1"
   :description "Raw package for cpp-httplib"
   :url "https://github.com/jank-lang/commons"
   :license {:name "MIT"
