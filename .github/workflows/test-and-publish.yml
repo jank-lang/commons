@@ -19,11 +19,10 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
     steps:
       - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
         with:
-          submodules: true
+          submodules: false
       - name: Install bb & clj-kondo
         run: |
           curl -sL -o install-bb https://raw.githubusercontent.com/babashka/babashka/master/install
