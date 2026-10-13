@@ -1,0 +1,9 @@
+{:tasks
+ {:requires [[babashka.fs :as fs]
+             [babashka.process :refer [shell]]]
+  lint (let [files (fs/glob "." "*/jank-build.bb")]
+        (when (seq files)
+         (->
+          (apply shell {:continue true} "clj-kondo" "--lint" files)
+          :exit
+          System/exit)))}}
