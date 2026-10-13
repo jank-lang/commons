@@ -1,5 +1,6 @@
 # jank-build
-[![Clojars Project](https://img.shields.io/clojars/v/org.jank-lang.commons/jank-build.svg)]
+[![Clojars Project](https://img.shields.io/clojars/v/org.jank-lang.commons/jank-build.svg)](https://releases.clojars.org/org.jank-lang.commons/jank-build)
+
 Build script helper functions.
 
 ## Usage
