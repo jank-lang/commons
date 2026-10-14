@@ -1,0 +1,38 @@
+(ns imtui-sys.example
+  (:include "imtui/imtui.h"
+            "imtui/imtui-impl-ncurses.h"))
+
+(defn -main []
+  (cpp/ImGui.CreateContext)
+  (let [screen (cpp/ImTui_ImplNcurses_Init true)
+        screen-width (-> (cpp/ImGui.GetIO) .-DisplaySize .-x)
+        screen-height (-> (cpp/ImGui.GetIO) .-DisplaySize .-y)
+        screen-middle-x (/ screen-width 2)
+        screen-middle-y (/ screen-height 2)
+        window-width (/ screen-width 3)
+        window-height (/ screen-height 3)]
+    (cpp/ImTui_ImplText_Init)
+
+    (while (cpp/! (cpp/ImGui.IsKeyPressed (int \q)))
+      (cpp/ImTui_ImplNcurses_NewFrame)
+      (cpp/ImTui_ImplText_NewFrame)
+      (cpp/ImGui.NewFrame)
+
+      (cpp/ImGui.SetNextWindowPos (cpp/ImVec2 (- screen-middle-x (/ window-width 2))
+                                              (- screen-middle-y (/ window-height 2)))
+                                  cpp/ImGuiCond_Once)
+      (cpp/ImGui.SetNextWindowSize (cpp/ImVec2 window-width window-height) cpp/ImGuiCond_Once)
+      (cpp/ImGui.Begin "jank")
+      (cpp/ImGui.Text "Hello, jank and imtui! Press q to quit.")
+      (cpp/ImGui.Text (format "Mouse position: {} {}"
+                              (-> (cpp/ImGui.GetIO) .-MousePos .-x)
+                              (-> (cpp/ImGui.GetIO) .-MousePos .-y)))
+      (cpp/ImGui.Text (format "FPS: {}" (.-Framerate (cpp/ImGui.GetIO))))
+      (cpp/ImGui.End)
+
+      (cpp/ImGui.Render)
+      (cpp/ImTui_ImplText_RenderDrawData (cpp/ImGui.GetDrawData) screen)
+      (cpp/ImTui_ImplNcurses_DrawScreen))
+
+    (cpp/ImTui_ImplText_Shutdown)
+    (cpp/ImTui_ImplNcurses_Shutdown)))
