@@ -3,8 +3,8 @@
 
   inputs = {
     flake-parts.url = "github:hercules-ci/flake-parts";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     jank.url = "git+https://github.com/jank-lang/jank?submodules=1";
+    nixpkgs.follows = "jank/nixpkgs";
     self.submodules = true;
   };
 
