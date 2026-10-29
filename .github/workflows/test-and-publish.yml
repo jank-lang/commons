@@ -39,7 +39,7 @@ jobs:
   ubuntu-test:
     name: Ubuntu 24.04 - Test
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
         with:
@@ -92,7 +92,7 @@ jobs:
     runs-on: macos-26
     env:
       HOMEBREW_NO_AUTO_UPDATE: 1
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
         with:
