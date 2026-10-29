@@ -1,5 +1,6 @@
 (require '[babashka.fs :as fs]
          '[jank.build.cmake :refer [cmake]]
+         '[jank.build.pkg-config :refer [pkg-config]]
          '[jank.build.util :as util])
 
 (let [raylib-sys (get-in *input* [:inputs "org.jank-lang.commons/raylib-sys"])]
@@ -15,4 +16,6 @@
   (util/include-dir "include")
   (util/link-dir "lib")
   (util/link-library "r3d")
-  (util/link-library "assimp"))
+  (util/link-library "assimp")
+  ;; for assimp
+  (pkg-config *input* "zlib"))
