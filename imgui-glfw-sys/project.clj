@@ -5,7 +5,7 @@
             :url "https://github.com/ocornut/imgui/blob/master/LICENSE.txt"}
   :build-dependencies [[org.jank-lang.commons/jank-build "2026.10-1"]]
   :dependencies [[org.jank-lang.commons/glfw-sys "2026.10-1"]
-                 [org.jank-lang.commons/imgui-sys "2026.09-3"]]
+                 [org.jank-lang.commons/imgui-sys "2026.10-1"]]
   :plugins [[org.jank-lang/lein-jank "2026.10-1"]]
   :middleware [leiningen.jank/middleware]
   :verbatim-paths ["CMakeLists.txt"])
