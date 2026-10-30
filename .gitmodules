@@ -31,3 +31,6 @@
 [submodule "implot3d-sys/lib/implot3d"]
 	path = implot3d-sys/lib/implot3d
 	url = https://github.com/brenocq/implot3d
+[submodule "r3d-sys/lib/r3d"]
+	path = r3d-sys/lib/r3d
+	url = https://github.com/Bigfoot71/r3d

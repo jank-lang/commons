@@ -1,0 +1,62 @@
+(ns r3d-sys.example
+  (:include "numbers" "raylib.h" "r3d/r3d.h"))
+
+(defn -main [& args]
+  (cpp/InitWindow 800 600 "r3d demo")
+  (cpp/SetTargetFPS 60)
+  (cpp/R3D_Init (cpp/GetScreenWidth) (cpp/GetScreenHeight))
+
+  ;; Set up a bunch of fancy rendering features.
+  (let [env (cpp/R3D_GetEnvironment)]
+    ;; Indirect lighting
+    (cpp/= (.-enabled (.-ssil env)) true)
+    (cpp/= (.-giIntensity (.-ssil env)) 20.0)
+    (cpp/= (.-aoIntensity (.-ssil env)) 20.0)
+    (cpp/= (.-radius (.-ssil env)) 20.0)
+    ;; Bloom
+    (cpp/= (.-intensity (.-bloom env)) 0.2)
+    (cpp/= (.-mode (.-bloom env)) cpp/R3D_BLOOM_MIX)
+    ;; Volumetric fog
+    (cpp/= (.-enabled (.-volumetricFog env)) true)
+    (cpp/= (.-anisotropy (.-volumetricFog env)) 0.3)
+    (cpp/= (.-scatteringDensity (.-volumetricFog env)) 0.1)
+    ;; Tonemapping
+    (cpp/= (.-mode (.-tonemap env)) cpp/R3D_TONEMAP_FILMIC)
+    ;; Sky/ambient
+    (cpp/= (.-color (.-background env)) cpp/WHITE)
+    (cpp/= (.-color (.-ambient env)) cpp/DARKGRAY))
+
+  ;; Enable anti-aliasing
+  (cpp/R3D_SetAntiAliasingMode cpp/R3D_ANTI_ALIASING_MODE_SMAA)
+  (cpp/R3D_SetAntiAliasingPreset cpp/R3D_ANTI_ALIASING_PRESET_HIGH)
+
+  ;; Lights, camera, action!
+  (let [camera          (cpp/R3D_CameraToRL cpp/R3D_CAMERA_BASE)
+        light           (cpp/R3D_CreateDirLight (cpp/Vector3 1.0 0.0 1.0) (cpp/Color 255 255 255 255) 1.0)
+        shadow-map      (cpp/R3D_LoadShadowMap cpp/R3D_LIGHT_DIR)
+        ground          (cpp/R3D_GenMeshPlane 20.0 20.0 1 1)
+        ground-material cpp/R3D_MATERIAL_BASE
+        mesh            (cpp/R3D_GenMeshSphere 5.0 32 32)
+        mesh-material   (let  [mat cpp/R3D_MATERIAL_BASE]
+                          (cpp/= (.-color (.-albedo mat)) (cpp/Color 255 0 255 255))
+                          mat)]
+    (while (cpp/! (cpp/WindowShouldClose))
+      (let [t (cpp/GetTime)]
+        (let [rate 0.1
+              dist 20.0
+              x    (* dist (cpp/cos (* 2.0 cpp/std.numbers.pi rate t)))
+              z    (* dist (cpp/sin (* 2.0 cpp/std.numbers.pi rate t)))]
+          (cpp/= (.-x (.-position camera)) x)
+          (cpp/= (.-y (.-position camera)) 5.0)
+          (cpp/= (.-z (.-position camera)) z))
+        (cpp/UpdateCamera (cpp/& camera) cpp/CAMERA_ORBITAL)
+
+        (cpp/BeginDrawing)
+        (cpp/R3D_Begin camera)
+        (cpp/R3D_PushLightEx light shadow-map true)
+        (cpp/R3D_DrawMesh ground ground-material (cpp/Vector3 0.0 -5.0 0.0) 1.0)
+        (cpp/R3D_DrawMesh mesh mesh-material (cpp/Vector3 0.0 0.0 0.0) 1.0)
+        (cpp/R3D_End)
+        (cpp/EndDrawing))))
+
+  (cpp/CloseWindow))
