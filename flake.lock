@@ -42,11 +42,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1791596769,
-        "narHash": "sha256-dBLohO/4LedZratzgkjhMxIA6mZ6ujvrIlTouye4E6k=",
+        "lastModified": 1793216919,
+        "narHash": "sha256-pJJsP6hrSny9AimMPj5ePdHccoj1EedT3szg61QHNP8=",
         "ref": "refs/heads/main",
-        "rev": "cd648e4d6c7347291538cf45e3dd4434ce27fddb",
-        "revCount": 5021,
+        "rev": "3b7ffc220fb8c65eecf4e777bfcc8e5252d30fb3",
+        "revCount": 5091,
         "submodules": true,
         "type": "git",
         "url": "https://github.com/jank-lang/jank"
@@ -103,27 +103,14 @@
         "type": "github"
       }
     },
-    "nixpkgs_2": {
-      "locked": {
-        "lastModified": 1791487292,
-        "narHash": "sha256-tqM7xDEsaeK1p6VvRygeZ9LkQRpUUkbRT02BHv6hnTM=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "8edc0c72e3a38faf5434e40d1f19431125fe4b30",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixpkgs-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "flake-parts": "flake-parts",
         "jank": "jank",
-        "nixpkgs": "nixpkgs_2"
+        "nixpkgs": [
+          "jank",
+          "nixpkgs"
+        ]
       }
     }
   },
