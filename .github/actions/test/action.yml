@@ -29,6 +29,8 @@ runs:
           exit 1
         fi
 
+        shared_target="${RUNNER_TEMP}/target"
+        mkdir -p "${shared_target}"
 
         for dir in */example;
         do
@@ -36,8 +38,8 @@ runs:
           package_failed=0
 
           pushd "${dir}"
-          lein compile || package_failed=1
-          lein with-profile +release compile || package_failed=1
+          lein update-in :jank assoc :target-dir "\"${shared_target}\"" -- compile || package_failed=1
+          lein with-profile +release update-in :jank assoc :target-dir "\"${shared_target}\"" -- compile || package_failed=1
           popd
 
           if [[ "${package_failed}" == 1 ]];

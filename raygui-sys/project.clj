@@ -10,7 +10,7 @@
   ;; 5.5. raygui carries its own copy, but only behind RAYGUI_STANDALONE, which
   ;; this package does not define. So raylib-sys has to stay on raylib 5.5 or
   ;; newer, and against 5.0 that call is an undefined symbol.
-  :dependencies [[org.jank-lang.commons/raylib-sys "2026.09-1"]]
+  :dependencies [[org.jank-lang.commons/raylib-sys "2026.10-1"]]
   :verbatim-paths ["lib/raygui/LICENSE"
                    "lib/raygui/src/raygui.h"
                    "CMakeLists.txt"
