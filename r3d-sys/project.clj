@@ -1,4 +1,4 @@
-(defproject org.jank-lang.commons/r3d-sys "0.1-SNAPSHOT"
+(defproject org.jank-lang.commons/r3d-sys "2026.10-1"
   :description "Raw package for r3d."
   :url "https://github.com/jank-lang/commons"
   :license {:name "zlib"
