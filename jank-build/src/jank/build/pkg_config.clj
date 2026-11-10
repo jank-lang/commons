@@ -51,7 +51,7 @@
   jank-build directives will automatically be output for these values."
   [build-input pc-name]
   ;; TODO: parse preprocessor defines from cflags
-  (let [pc-cmd    (cond-> ["pkg-config" pc-name "--libs" "--cflags"]
+  (let [pc-cmd    (cond-> ["pkg-config" pc-name "--keep-system-libs" "--keep-system-cflags" "--libs" "--cflags"]
                     (:static? build-input) (conj "--static"))
         brew-path (brew-pkg-config-path build-input pc-name)
         pc-opts   {:extra-env {"PKG_CONFIG_PATH" (pkg-config-path brew-path)}
