@@ -34,3 +34,6 @@
 [submodule "r3d-sys/lib/r3d"]
 	path = r3d-sys/lib/r3d
 	url = https://github.com/Bigfoot71/r3d
+[submodule "flecs-sys/lib/flecs"]
+	path = flecs-sys/lib/flecs
+	url = https://github.com/SanderMertens/flecs

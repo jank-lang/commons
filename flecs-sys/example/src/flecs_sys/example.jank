@@ -1,0 +1,38 @@
+(ns flecs-sys.example
+  (:include "flecs.h"))
+
+(cpp/raw "struct Position { double x, y; };
+          struct Velocity { double x, y; };
+
+          void add_move_system(flecs::world &world)
+          {
+            world.system<Position, Velocity const>(\"Move\")
+              .each([](Position &p, Velocity const &v)
+                    {
+                      p.x += v.x;
+                      p.y += v.y;
+                    });
+          }
+
+          Position const &position_of(flecs::entity e)
+          { return e.get<Position>(); }")
+
+(defn -main [& args]
+  (let [world (cpp/flecs.world)
+        _ (cpp/add_move_system world)
+
+        bob (.entity world "Bob")
+
+        ;; We set bob position using the C++ api ...
+        _ (.set bob (cpp/Position 10.0 20.0))
+
+        ;; ... but the C API works as well.
+        ;; In cpp, the 3 lines below would be simply (.set bob (cpp/Velocity 1.0 2.0))
+        w-ptr (.c_ptr world)
+        velocity-comp (.id (#cpp (cpp/flecs.component Velocity) w-ptr))
+        size (.-size (cpp/ecs_get_type_info w-ptr velocity-comp))
+        _ (cpp/ecs_set_id w-ptr (.id bob) velocity-comp size (cpp/& (cpp/Velocity 1.0 2.0)))]
+    (dotimes [_ 5]
+      (.progress world)
+      (let [position (cpp/position_of bob)]
+        (println (format "{} {} {}" (.c_str (.name bob)) (.-x position) (.-y position)))))))
