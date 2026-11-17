@@ -38,7 +38,13 @@
   and link libraries."
   [build-input pc-name]
   ;; TODO: parse preprocessor defines from cflags
-  (let [pc-cmd    (cond-> ["pkg-config" pc-name "--libs" "--cflags"]
+  (let [pc-cmd    (cond-> ["pkg-config" pc-name
+                           "--libs" "--cflags"
+                           ;; Because of the bug, jank doesn’t include all the system
+                           ;; library paths that Clang includes by default (see #32).
+                           ;; As a temporary safety net, we ask pkg-config to always
+                           ;; output them so they can be used in jank’s build process.
+                           "--keep-system-libs" "--keep-system-cflags"]
                     (:static? build-input) (conj "--static"))
         brew-path (brew-pkg-config-path build-input pc-name)
         pc-opts   (cond-> {:out :string}
