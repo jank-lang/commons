@@ -67,9 +67,9 @@ jobs:
             libxkbcommon-dev libdrm-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev
             libegl1-mesa-dev libdbus-1-dev libibus-1.0-dev libudev-dev libthai-dev libusb-1.0-0-dev
             libpipewire-0.3-dev liburing-dev
-            libmagic-dev
+            libmagic-dev liblzma-dev
           # Increment this when the package list changes.
-          version: 7
+          version: 8
       - name: Install jank
         run: |
           sudo apt install -y curl gnupg lsb-release

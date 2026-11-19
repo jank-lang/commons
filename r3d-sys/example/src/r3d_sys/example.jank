@@ -44,8 +44,8 @@
       (let [t (cpp/GetTime)]
         (let [rate 0.1
               dist 20.0
-              x    (* dist (cpp/cos (* 2.0 cpp/std.numbers.pi rate t)))
-              z    (* dist (cpp/sin (* 2.0 cpp/std.numbers.pi rate t)))]
+              x    (* dist (cpp/std.cos (* 2.0 cpp/std.numbers.pi rate t)))
+              z    (* dist (cpp/std.sin (* 2.0 cpp/std.numbers.pi rate t)))]
           (cpp/= (.-x (.-position camera)) x)
           (cpp/= (.-y (.-position camera)) 5.0)
           (cpp/= (.-z (.-position camera)) z))
