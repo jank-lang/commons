@@ -23,8 +23,8 @@ void PlotLineD(const char* label_id, jank::runtime::obj::persistent_vector_ref x
         r -0.5
         ω 5.0
         ϕ 0.0]
-    (* A (* (cpp/exp (* r t))
-            (cpp/sin (+ (* ω t) ϕ))))))
+    (* A (* (cpp/std.exp (* r t))
+            (cpp/std.sin (+ (* ω t) ϕ))))))
 
 (defn -main []
   (cpp/glfwInit)

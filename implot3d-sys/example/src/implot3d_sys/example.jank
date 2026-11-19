@@ -34,8 +34,8 @@ void PlotLineD(const char* label_id,
     (cpp/ImPlot3D.CreateContext)
 
     (let [xs (vec (range 0.0 (* 20 cpp/std.numbers.pi) 0.1))
-          ys (mapv #(cpp/cos %) xs)
-          zs (mapv #(cpp/sin %) xs)]
+          ys (mapv #(cpp/std.cos %) xs)
+          zs (mapv #(cpp/std.sin %) xs)]
       (while (cpp/! (cpp/glfwWindowShouldClose window*))
         (cpp/glfwPollEvents)
         (cpp/ImGui_ImplOpenGL2_NewFrame)

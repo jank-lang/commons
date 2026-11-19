@@ -38,6 +38,7 @@
           glfw3
           ncurses
           sqlite
+          file
         ];
       in {
         legacyPackages = pkgs;
