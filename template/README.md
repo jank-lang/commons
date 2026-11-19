@@ -6,7 +6,7 @@ TODO description.
 Add this project to your Leiningen `:dependencies` vector:
 
 ```clojure
-[org.jank-lang.commons/TODO "TODO"]
+[org.jank-lang.commons/TODO "0.1-SNAPSHOT"]
 ```
 
 ## Example
