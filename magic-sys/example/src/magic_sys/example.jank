@@ -1,0 +1,49 @@
+(ns magic-sys.example
+  (:require [clojure.string :as str])
+  (:include "magic.h"))
+
+(defn file-mime-type [file]
+  ;; By default, error returns string with error message.
+  ;; To return null instead, we include MAGIC_ERROR flag.
+  ;; And to follow symlinks we include MAGIC_SYMLINK flag.
+  (when-let [cookie (cpp/magic_open (bit-or cpp/MAGIC_MIME_TYPE
+                                            cpp/MAGIC_ERROR
+                                            cpp/MAGIC_SYMLINK))]
+    (let [result (when (zero? (cpp/magic_load cookie cpp/nullptr))
+                   (cpp/magic_file cookie file))]
+      (cpp/magic_close cookie)
+      result)))
+
+(defn buffer-mime-type [^(:* char) buffer size]
+  (when-let [cookie (cpp/magic_open (bit-or cpp/MAGIC_MIME_TYPE
+                                            cpp/MAGIC_ERROR
+                                            cpp/MAGIC_SYMLINK))]
+    (let [result (when (zero? (cpp/magic_load cookie cpp/nullptr))
+                   (cpp/magic_buffer cookie buffer size))]
+      (cpp/magic_close cookie)
+      result)))
+
+(defn file-extensions [file]
+  (when-let [cookie (cpp/magic_open (-> cpp/MAGIC_EXTENSION
+                                        (bit-or cpp/MAGIC_ERROR)
+                                        (bit-or cpp/MAGIC_SYMLINK)))]
+    (let [result (when (zero? (cpp/magic_load cookie cpp/nullptr))
+                   (when-let [s (cpp/magic_file cookie file)]
+                     (str/split s #"/")))]
+      (cpp/magic_close cookie)
+      result)))
+
+(defn -main [& args]
+  ;; Get file mime type using file path.
+  (println (file-mime-type "./resources/file"))
+  ;; => "image/jpeg"
+
+  ;; Get file extensions using file path.
+  (println (file-extensions "./resources/file"))
+  ;; => ["jpeg" "jpg" "jpe" "jfif"]
+
+  ;; Get buffer mime type from buffer.
+  (let [s (cpp/cast std.string (slurp "./resources/file"))]
+    (println (buffer-mime-type (cpp/box (.data s)) (.size s))))
+  ;; => "image/jpeg"
+  )
